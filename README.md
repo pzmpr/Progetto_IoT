@@ -7,6 +7,6 @@
   - installare librerie python presenti nel file **notes.txt**
 
 ## To do:
-  - scattare fot automaticamente ogni x secondi e salvarle in una directory apposita
+  - scattare foto automaticamente ogni x secondi e salvarle in una directory apposita
   - usare foto per stampare il risultato dall'analizzatore di volti
   - cancellare foto quando sono state usate
