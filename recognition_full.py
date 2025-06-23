@@ -22,7 +22,6 @@ stop = False
 def handle_signal(signum, frame):
     global stop
     stop = True
-    print(f"\nSignal received")
 
 signal.signal(signal.SIGINT, handle_signal)
 
