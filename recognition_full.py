@@ -11,7 +11,7 @@ cam = cv.VideoCapture(0)
 known_image = face_recognition.load_image_file("Images/pietro.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
     
-# Capture one frame every 5 seconds
+# Initialize time and interval
 previous = time()
 delta = 0
 
@@ -26,11 +26,13 @@ def handle_signal(signum, frame):
 
 signal.signal(signal.SIGINT, handle_signal)
 
+# loop
 while not stop:
     current = time()
     delta += current - previous
     previous = current
-
+    
+    # Cattura un frame ogni 3 secondi
     if delta > 3:
         ret, frame = cam.read()
         dest = "Images/captured_image.png"
@@ -47,7 +49,7 @@ while not stop:
         # ci sono volti nell'immagine
         else:
             unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
-            #creazione risposta
+            # creazione risposta
             results = face_recognition.compare_faces([known_encoding], unknown_encoding)
             answer = "Si" if results[0] else "No"
             print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
