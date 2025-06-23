@@ -8,8 +8,14 @@ import signal
 cam = cv.VideoCapture(0)
 
 # Initialize images variables
+known_encodings_buffer = []
 known_image = face_recognition.load_image_file("Images/pietro.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
+known_encodings_buffer += [(known_encoding, "Pietro")]
+
+known_image = face_recognition.load_image_file("Images/ezio_greggio.jpg")
+known_encoding = face_recognition.face_encodings(known_image)[0]
+known_encodings_buffer += [(known_encoding, "Ezio Greggio")]
     
 # Initialize time and interval
 previous = time()
@@ -31,7 +37,7 @@ while not stop:
     delta += current - previous
     previous = current
     
-    # Cattura un frame ogni 3 secondi
+    # cattura un frame ogni 3 secondi
     if delta > 3:
         ret, frame = cam.read()
         dest = "Images/captured_image.png"
@@ -49,8 +55,12 @@ while not stop:
         else:
             unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
             # creazione risposta
-            results = face_recognition.compare_faces([known_encoding], unknown_encoding)
-            answer = "Si" if results[0] else "No"
+            for encoding in known_encodings_buffer:
+                results = face_recognition.compare_faces([encoding[0]], unknown_encoding)
+                if results:
+                    name = encoding[1]
+                    break
+            answer = ("Si, e\' " + name)  if results[0] else "No"
             print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
             try: 
                 os.remove(dest)
