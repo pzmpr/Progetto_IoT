@@ -1,14 +1,12 @@
 # Face recognition (Progetto IoT)
 ## Cosa fa:
-  - scatta foto utilizzando telecamera del dispositivo
+  - scatta foto utilizzando la telecamera del dispositivo
   - riconosce somiglianze tra volti presenti in due immagini e risponde dicendo se sono lo stesso volto
-  - scatta foto ogni 5 sec e riconosce le somglianze dall'immagine salvata in memoria
+  - scatta foto ogni 3 sec e riconosce le somglianze dall'immagine salvata in memoria (le foto vengono poi cancellate)
 
 ## Note:
   - installare librerie python presenti nel file **notes.txt**
+  - aggiunto supporto per piu' volti in **recognition_full.py** (le immagini sono da inserire in /Images)
 
 ## To do:
   - rivedere tempi di recognition_full
-  - implementare recognition_full per piu' volti
-    - salvare piu' foto
-    - fare un **or** tra le answer e stampare il risultato
