@@ -1,6 +1,0 @@
-modules used:
-- opencv-python
-- cmake
-- dlib
-- face_recognition
-- setuptools
