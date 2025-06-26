@@ -10,7 +10,7 @@ cam = cv.VideoCapture(0)
 # Inizializzazione variabili immagini
 known_encodings_buffer = []
 
-# Inserire percorso delle immagini note
+# Inserire percorso delle immagini note (specificando il nome della persona)
 known_image = face_recognition.load_image_file("Images/ezio_greggio.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
 known_encodings_buffer += [(known_encoding, "Ezio Greggio")]
