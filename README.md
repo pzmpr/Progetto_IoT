@@ -1,5 +1,5 @@
 # Face recognition (Progetto IoT)
-## Cosa fa:
+## Cosa fa (recognition_full.py):
   - scatta foto utilizzando la telecamera del dispositivo
   - scatta foto ogni 3 sec e riconosce le somglianze dall'immagine salvata in memoria (le foto vengono poi cancellate)
   - riconosce somiglianze tra volti presenti in due immagini e risponde dicendo se sono lo stesso volto (con il nome della persona)
