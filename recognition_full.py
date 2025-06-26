@@ -4,20 +4,22 @@ import face_recognition
 import os
 import signal
 
-# Initialize webcam
+# Inizializzazione webcam
 cam = cv.VideoCapture(0)
 
-# Initialize images variables
+# Inizializzazione variabili immagini
 known_encodings_buffer = []
-known_image = face_recognition.load_image_file("Images/pietro.jpg")
-known_encoding = face_recognition.face_encodings(known_image)[0]
-known_encodings_buffer += [(known_encoding, "Pietro")]
 
+# Inserire percorso delle immagini note
 known_image = face_recognition.load_image_file("Images/ezio_greggio.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
 known_encodings_buffer += [(known_encoding, "Ezio Greggio")]
-    
-# Initialize time and interval
+
+# known_image = face_recognition.load_image_file("Images/pietro.jpg")
+# known_encoding = face_recognition.face_encodings(known_image)[0]
+# known_encodings_buffer += [(known_encoding, "Pietro")]
+
+# Initializzazione time e intervallo
 previous = time()
 delta = 0
 
@@ -67,7 +69,7 @@ while not stop:
             except: pass
 
         delta = 0
-        # elimino foto nel buffer
+        # elimino foto nel buffer (la fotocamera scatta foto in successione)
         cam.grab()
         cam.grab()
         cam.grab()
