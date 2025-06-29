@@ -10,3 +10,6 @@
   - aggiunto supporto per piu' volti in **recognition_full.py** (le immagini sono da inserire in /Images)
 
 ## To do:
+  - implementare sistema per registrare video
+  - implementare attivazione registrazione attraverso riconoscimento persona / movimento
+  - migliorare recognition_full inserendo dati di timestamp e conta delle persone
