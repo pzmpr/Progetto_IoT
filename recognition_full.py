@@ -1,5 +1,6 @@
 import cv2 as cv
 from time import time
+from datetime import datetime
 import face_recognition
 import os
 import signal
@@ -19,7 +20,9 @@ known_encodings_buffer += [(known_encoding, "Ezio Greggio")]
 # known_encoding = face_recognition.face_encodings(known_image)[0]
 # known_encodings_buffer += [(known_encoding, "Pietro")]
 
-# Initializzazione time e intervallo
+# Initializzazione contatore persone, time e intervallo
+count = 0
+presents = []
 previous = time()
 delta = 0
 
@@ -47,9 +50,11 @@ while not stop:
 
         # creazione dati immagine sconosciuta
         unknown_image = face_recognition.load_image_file(dest)
+        # stampa data e ora
+        print(datetime.now())
         # non sono stati riconosciuti volti nell'immagine
         if( len(face_recognition.face_encodings(unknown_image)) == 0 ):
-            print("L'immagine sconosciuta e' quella di una persona conosciuta: No")
+            print("Non e' stato riconosciuto alcun volto")
             try: 
                 os.remove(dest)
             except: pass
@@ -62,12 +67,21 @@ while not stop:
                 if results:
                     name = encoding[1]
                     break
-            answer = ("Si, e\' " + name)  if results[0] else "No"
+            if results[0]:
+                answer = ("Si, e\' " + name)
+                if name not in presents:
+                    # TODO: il contatore e il buffer andrebbero re-inizializzati manualmente o quando cambia giorno
+                    presents += [name]
+                    count += 1
+            else:
+                answer = "No"
             print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
             try: 
                 os.remove(dest)
             except: pass
 
+        print(count)
+        print()
         delta = 0
         # elimino foto nel buffer (la fotocamera scatta foto in successione)
         cam.grab()
