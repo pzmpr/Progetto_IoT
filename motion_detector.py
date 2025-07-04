@@ -9,7 +9,7 @@ import cv2
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
 ap.add_argument("-v", "--video", help="path to the video file")
-ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size") # NOTE: cambiare in base alla telecamera
+ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
 args = vars(ap.parse_args())
 
 # if the video argument is None, then we are reading from webcam
@@ -78,7 +78,7 @@ while True:
 # draw the text and timestamp on the frame
  cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
- cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
+ cv2.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %I:%M:%S%p"),
   (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
  # show the frame and record if the user presses a key
