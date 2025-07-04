@@ -12,5 +12,4 @@
 ## To do:
   - implementare sistema per registrare video
   - implementare attivazione registrazione attraverso riconoscimento persona / movimento
-  - migliorare recognition_full inserendo dati di timestamp e conta delle persone
   - fare in modo che una stessa persona non venga riconosciuta due volte nello stesso giorno
