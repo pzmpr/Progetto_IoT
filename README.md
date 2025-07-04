@@ -13,7 +13,7 @@
   - visualizza un video (telecamera o file)
   - calcola i cambiamenti avvenuti dal frame iniziale
   - riconosce gli oggetti che si sono mossi
-  - funziona solo per telecamere fisse (per implementarlo con telecamere in movimento di puo' inizializzare regolarmente il frame iniziale
+  - funziona solo per telecamere fisse (per implementarlo con telecamere in movimento si puo' inizializzare regolarmente il frame iniziale)
 
 ## To do:
   - implementare sistema per registrare video
