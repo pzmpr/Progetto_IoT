@@ -15,7 +15,7 @@ cap = cv2.VideoCapture(0)
 
 # Define the codec and create VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('Videos/output.avi', fourcc, 17.5, (640,  480)) # ! impostare la risoluzione della fotocamera
+out = cv2.VideoWriter('Videos/output.avi', fourcc, 17.5, (640,  480)) # ! 4th arg: impostare la risoluzione della fotocamera
                                                                       # ! 3rd arg: velocita' video
 time.sleep(2.0)
 # initialize the first frame in the video stream
