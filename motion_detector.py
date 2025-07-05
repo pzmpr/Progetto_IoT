@@ -15,12 +15,15 @@ cap = cv2.VideoCapture(0)
 
 # Define the codec and create VideoWriter object
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('Videos/output.avi', fourcc, 10.0, (640,  480)) # ! impostare la risoluzione della fotocamera
-
+out = cv2.VideoWriter('Videos/output.avi', fourcc, 17.5, (640,  480)) # ! impostare la risoluzione della fotocamera
+                                                                      # ! 3rd arg: velocita' video
 time.sleep(2.0)
 # initialize the first frame in the video stream
 firstFrame = None
 
+text = "Unoccupied"
+active = False
+timer = 50 # 5 secondi
 
 
 # loop over the frames of the video
@@ -33,8 +36,25 @@ while True:
   print("Can't receive frame (stream end?). Exiting ...")
   break
  frame = frame if args.get("video", None) is None else frame[1]
- # write frame
- out.write(frame)
+
+ # draw the text and timestamp on the frame
+ cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
+  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+ cv2.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %I:%M:%S%p"),
+  (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+
+ if text == "Occupied":
+     active = True
+     timer = 50
+     # write frame
+     out.write(frame)
+ elif active:
+     out.write(frame)
+     timer -= 1
+     if timer == 0:
+         active = False
+         timer = 50
+
  text = "Unoccupied"
 
  # if the frame could not be grabbed, then we have reached the end
@@ -57,7 +77,7 @@ while True:
 # compute the absolute difference between the current frame and
  # first frame
  frameDelta = cv2.absdiff(firstFrame, gray)
- thresh = cv2.threshold(frameDelta, 50, 255, cv2.THRESH_BINARY)[1] # NOTE: change 2nd arg if detecting micromovements
+ thresh = cv2.threshold(frameDelta, 75, 255, cv2.THRESH_BINARY)[1] # NOTE: change 2nd arg if detecting micromovements
 
  # dilate the thresholded image to fill in holes, then find contours
  # on thresholded image
@@ -80,10 +100,10 @@ while True:
 
 
 # draw the text and timestamp on the frame
- cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
-  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
- cv2.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %I:%M:%S%p"),
-  (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+# cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
+#  cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+# cv2.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %I:%M:%S%p"),
+#  (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
  # show the frame and record if the user presses a key
  cv2.imshow("Thresh", thresh)
