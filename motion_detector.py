@@ -1,5 +1,4 @@
 # import the necessary packages
-from imutils.video import VideoStream
 import argparse
 import datetime
 import imutils
@@ -8,19 +7,19 @@ import cv2
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video", help="path to the video file")
 ap.add_argument("-a", "--min-area", type=int, default=500, help="minimum area size")
 args = vars(ap.parse_args())
 
-# if the video argument is None, then we are reading from webcam
-if args.get("video", None) is None:
- vs = VideoStream(src=0).start()
- time.sleep(2.0)
-# otherwise, we are reading from a video file
-else:
- vs = cv2.VideoCapture(args["video"])
+# we are reading from webcam
+cap = cv2.VideoCapture(0)
+
+# Define the codec and create VideoWriter object
+fourcc = cv2.VideoWriter_fourcc(*'XVID')
+out = cv2.VideoWriter('Videos/output.avi', fourcc, 10.0, (640,  480)) # ! impostare la risoluzione della fotocamera
+
+time.sleep(2.0)
 # initialize the first frame in the video stream
-firstFrame = None 
+firstFrame = None
 
 
 
@@ -29,8 +28,13 @@ while True:
 
  # grab the current frame and initialize the occupied/unoccupied
  # text
- frame = vs.read()
+ ret, frame = cap.read()
+ if not ret:
+  print("Can't receive frame (stream end?). Exiting ...")
+  break
  frame = frame if args.get("video", None) is None else frame[1]
+ # write frame
+ out.write(frame)
  text = "Unoccupied"
 
  # if the frame could not be grabbed, then we have reached the end
@@ -82,19 +86,15 @@ while True:
   (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
  # show the frame and record if the user presses a key
- cv2.imshow("Security Feed", frame)
  cv2.imshow("Thresh", thresh)
  cv2.imshow("Frame Delta", frameDelta)
+ cv2.imshow("Security Feed", frame)
  key = cv2.waitKey(1) & 0xFF
  # if the q key is pressed, break from the lop
  if key == ord("q"):
   break
 
 # cleanup the camera and close any open windows
-vs.stop() if args.get("video", None) is None else vs.release()
+cap.release()
+out.release()
 cv2.destroyAllWindows()
-
-
-
-# $ python3 motion_detector.py --video videos/example_02.mp4
-# senza argomento --video : telecamera
