@@ -14,8 +14,8 @@
   - calcola i cambiamenti avvenuti dal frame iniziale
   - riconosce gli oggetti che si sono mossi
   - funziona solo per telecamere fisse (per implementarlo con telecamere in movimento si puo' inizializzare regolarmente il frame iniziale)
+  - registra video
 
 ## To do:
-  - implementare sistema per registrare video
-  - implementare attivazione registrazione attraverso riconoscimento persona / movimento
+  - implementare attivazione registrazione attraverso riconoscimento di movimento
   - fare in modo che una stessa persona non venga riconosciuta due volte nello stesso giorno
