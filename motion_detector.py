@@ -3,6 +3,7 @@ import datetime
 import imutils
 import time
 import cv2
+import os
 
 # argomento
 ap = argparse.ArgumentParser()
@@ -101,6 +102,10 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     # pressione tasto 'q' -> uscita
     if key == ord("q"):
+        break
+    # uscita, scarta video
+    if key == ord("z"):
+        os.remove("Videos/output.avi")
         break
 
 
