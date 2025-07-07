@@ -20,3 +20,4 @@
 
 ## To do:
   - fare in modo che una stessa persona non venga riconosciuta due volte nello stesso giorno
+  - comprimere il video generato da motion_detector.py
