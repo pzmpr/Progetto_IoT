@@ -4,6 +4,7 @@ import imutils
 import time
 import cv2
 import os
+import ffmpeg
 
 # argomento
 ap = argparse.ArgumentParser()
@@ -15,7 +16,7 @@ cap = cv2.VideoCapture(0)
 
 # creazione oggetto VideoWriter
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('Videos/output.avi', fourcc, 17.5, (640,  480)) # ! 4th arg: impostare la risoluzione della fotocamera
+out = cv2.VideoWriter('Videos/output.avi', fourcc, 10, (640,  480))   # ! 4th arg: impostare la risoluzione della fotocamera
                                                                       # ! 3rd arg: velocita' video
 time.sleep(2.0)
 # inizializza primo frame nello stream video
@@ -37,23 +38,7 @@ while True:
         break
     frame = frame if args.get("video", None) is None else frame[1]
     
-    # scrittura stato della stanza e timestamo
-    cv2.putText(frame, "Stato: {}".format(text), (10, 20),
-        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-    cv2.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %H:%M:%S"),
-        (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
     
-    if text == "Occupato":
-        active = True
-        timer = 50
-        # write frame
-        out.write(frame)
-    elif active:
-        out.write(frame)
-        timer -= 1
-        if timer == 0:
-            active = False
-            timer = 50
     
     text = "Libero"
     
@@ -62,7 +47,7 @@ while True:
         break
     
     # scala il frame, convertilo a scala di grigi, sfuoca
-    frame = imutils.resize(frame, width=500)
+    # frame = imutils.resize(frame, width=500)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray = cv2.GaussianBlur(gray, (21, 21), 0)
     
@@ -94,6 +79,24 @@ while True:
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Occupato"
 
+    # scrittura stato della stanza e timestamo
+    cv2.putText(frame, "Stato: {}".format(text), (10, 20),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+    cv2.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %H:%M:%S"),
+        (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+    
+    if text == "Occupato":
+        active = True
+        timer = 50
+        # write frame
+        out.write(frame)
+    elif active:
+        out.write(frame)
+        timer -= 1
+        if timer == 0:
+            active = False
+            timer = 50
+
 
     # mostra il frame attuale
     cv2.imshow("Thresh", thresh)
@@ -102,6 +105,11 @@ while True:
     key = cv2.waitKey(1) & 0xFF
     # pressione tasto 'q' -> uscita
     if key == ord("q"):
+        # result = subprocess.run('ffmpeg -i Videos/output.avi -b 800k Videos/output.mp4')
+        result = ffmpeg.input('Videos/output.avi')
+        result = ffmpeg.output(result, 'Videos/output.mp4', bitrate='800k')
+        ffmpeg.run(result, overwrite_output = True)
+        os.remove("Videos/output.avi")
         break
     # uscita, scarta video
     if key == ord("z"):
