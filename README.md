@@ -15,9 +15,8 @@
   - riconosce gli oggetti che si sono mossi
   - aggiunto funzionamento per telecamera mobile
   - registra video solamente quando riconosce movimento (si disattiva dopo 5 secondi se non rileva piu' movimento)
-  - salva video in /Videos
+  - comprime e salva video in /Videos
   - per fermare il programma: q. Per uscire e sacrtare il video: z
 
 ## To do:
   - fare in modo che una stessa persona non venga riconosciuta due volte nello stesso giorno
-  - comprimere il video generato da motion_detector.py
