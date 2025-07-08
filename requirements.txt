@@ -3,3 +3,4 @@ cmake
 dlib
 face_recognition
 setuptools
+ffmpeg-python
