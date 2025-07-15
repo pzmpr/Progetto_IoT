@@ -32,6 +32,6 @@ while not shutdown:
     mqttc.publish("IMAGES", byteArr)
     file.close()
     time.sleep(5)
-    #mqttc.disconnect()
+    mqttc.disconnect()
 mqttc.loop_stop()
 sys.exit(0)
