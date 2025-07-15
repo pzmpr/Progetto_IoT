@@ -1,5 +1,4 @@
 import paho.mqtt.client as mqtt
-from random import randrange, uniform
 import time
 import signal
 import sys
