@@ -9,9 +9,9 @@ import time
 import os
 import ffmpeg
 
-mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # create new instance
 host = "127.0.0.1"
 port = 1883
+topic = "Video"
 
 prev_frame = None
 frame = None
@@ -74,7 +74,7 @@ def start_streaming():
     streaming_thread.start()
 
 def stream():
-    global frame, active, timer, text
+    global frame, active, timer, text, mqttc
     print("Streaming from video source : 0")
     while not stop:
         _ , frame = cam.read()
@@ -95,14 +95,12 @@ def stream():
             if timer == 0:
                 active = False
                 timer = 50
-        
 
+mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.connect(host, port)
-topic = "Video"
 cam = cv.VideoCapture(0)
 
 streaming_thread = threading.Thread(target=stream())
 
 # pulizia finestre / chiusura telecamera
 cam.release()
-out.release()
