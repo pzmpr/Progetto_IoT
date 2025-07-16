@@ -1,22 +1,23 @@
 import cv2 as cv
 import threading
-import numpy as np
 import paho.mqtt.client as mqtt
-import signal
 import argparse
 import datetime
+import signal
 import imutils
 import time
 import os
 import ffmpeg
+import numpy as np
 
-dest = "Video/" + str(datetime.date.today()) + ".avi"
+dest = "Videos/rec-" + str(datetime.date.today()) + ".avi"
 fourcc = cv.VideoWriter_fourcc(*'DIVX')
 out = cv.VideoWriter(dest, fourcc, 12.0, (640,  480))
 
 host = "127.0.0.1"
 port = 1883
 topic = "Video"
+
 prev_frame = None
 frame = None  # empty variable to store latest message received
 
@@ -31,9 +32,9 @@ def handle_signal(signum, frame):
 signal.signal(signal.SIGINT, handle_signal)
 
 def subscribe():
-    global client, stop
+    global mqttc, stop
     while not stop:
-        client.loop() # Start networking daemon
+        mqttc.loop() # Start networking daemon
     cv.destroyAllWindows()
     
     
@@ -49,14 +50,14 @@ def on_message(client, userdata, msg):  # The callback for when a PUBLISH messag
     # TODO codice compressione video
     out.write(frame)
     cv.imshow('recv', frame)
+    # TODO caricare nel db dati registrazione
     if cv.waitKey(1) & 0xFF == ord('q'):
         return
 
-client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # Create instance of client 
-client.on_connect = on_connect  # Define callback function for successful connection
-client.message_callback_add(topic, on_message)
-client.connect(host,port)  # connecting to the broking server
+mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+mqttc.on_connect = on_connect  # Define callback function for successful connection
+mqttc.message_callback_add(topic, on_message)
+mqttc.connect(host,port)  # connecting to the broking server
 
 t = threading.Thread(target=subscribe())    # make a thread to loop for subscribing
 t.start() # run this thread
-
