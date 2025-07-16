@@ -18,7 +18,8 @@ delta = 0
 # Inizializzazione dati connessione
 flag_is_connected = False
 qos = 2
-broker_address = "127.0.0.1"
+host = "127.0.0.1"
+port = 1883
 recieved_ans = False
 recieved_nm  = False
 results = ""
@@ -76,7 +77,7 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
-mqttc.connect("127.0.0.1", 1883)
+mqttc.connect(host, port)
 mqttc.loop_start() # inizio loop
 while not stop: 
     current = time()
