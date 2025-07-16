@@ -1,13 +1,12 @@
-# Face recognition (Progetto IoT)
+# Progetto IoT
+## Note:
+  - installare librerie python presenti nel file **requirements.txt**
+
 ## Cosa fa recognition_full.py:
   - scatta foto utilizzando la telecamera del dispositivo
   - scatta foto ogni 3 sec e riconosce le somglianze dall'immagine salvata in memoria (le foto vengono poi cancellate)
   - riconosce somiglianze tra volti presenti in due immagini e risponde dicendo se sono lo stesso volto (con il nome della persona)
   - per fermare il programma: CTRL-C
-
-## Note:
-  - installare librerie python presenti nel file **requirements.txt**
-  - aggiunto supporto per piu' volti in **recognition_full.py** (le immagini sono da inserire in /Images)
 
 ## Cosa fa motion_detector.py
   - visualizza un video (telecamera o file)
@@ -18,13 +17,7 @@
   - comprime e salva video in /Videos
   - per fermare il programma: q. Per uscire e scartare il video: z
 
-## connection
-  - contiene il codice di recognition_full.py
-  - il codice e' diviso tra i due file
-      - client -> codice raspberry
-      - server -> computer
-  - implementa una connessione mqtt
-  - vengono scambiate le immagini e le risposte
-
 ## To do:
-  - fare in modo che una stessa persona non venga riconosciuta due volte nello stesso giorno
+  - implementare database con codice
+  - fare in modo che una persona non venga riconosciuta 2 volte lo stesso giorno
+  - resettare count quando cambia giorno
