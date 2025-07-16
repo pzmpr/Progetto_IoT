@@ -26,7 +26,8 @@ presents = []
 # Inizializzazione dati connessione
 flag_is_connected = False
 qos = 2
-broker_address = "127.0.0.1"
+host = "127.0.0.1"
+port = 1883
 recieved = False
 results = ("","")
 
@@ -44,11 +45,11 @@ def on_publish(client, userdata, mid, reason_code, properties):
     print("Risposta inviata (%d)" %mid)
     
 def on_message(client, userdata, message):
+    global recieved
     file = open(dest, "wb")
     file.write(message.payload)
     print("Image Received")
     file.close()
-    global recieved
     recieved = True
     
 def on_connect(client, userdata, flags, reason_code, properties):
@@ -85,8 +86,10 @@ def compute_and_send():
             if name not in presents:
                 presents += [name]
                 count += 1
+            # TODO carica nel db count e timestamp (ora)
         else:
             results = ("No", "")
+            # TODO carica nel db dati persona sconosciuta e immagine nel file system
         print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
         try:
             os.remove(dest)
@@ -102,7 +105,7 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
-mqttc.connect("127.0.0.1", 1883)
+mqttc.connect(host, port)
 mqttc.loop_start() # inizio loop
 while not stop:
     if recieved:
