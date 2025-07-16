@@ -9,7 +9,7 @@ import time
 import os
 import ffmpeg
 
-client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # create new instance
+mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)  # create new instance
 host = "127.0.0.1"
 port = 1883
 
@@ -87,17 +87,17 @@ def stream():
             timer = 50
             # send frame
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
-            client.publish(topic, frame_str)
+            mqttc.publish(topic, frame_str)
         elif active:
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
-            client.publish(topic, frame_str)
+            mqttc.publish(topic, frame_str)
             timer -= 1
             if timer == 0:
                 active = False
                 timer = 50
         
 
-client.connect(host, port)
+mqttc.connect(host, port)
 topic = "Video"
 cam = cv.VideoCapture(0)
 
