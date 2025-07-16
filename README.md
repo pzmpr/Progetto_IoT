@@ -18,5 +18,13 @@
   - comprime e salva video in /Videos
   - per fermare il programma: q. Per uscire e scartare il video: z
 
+## connection
+  - contiene il codice di recognition_full.py
+  - il codice e' diviso tra i due file
+      - client -> codice raspberry
+      - server -> computer
+  - implementa una connessione mqtt
+  - vengono scambiate le immagini e le risposte
+
 ## To do:
   - fare in modo che una stessa persona non venga riconosciuta due volte nello stesso giorno
