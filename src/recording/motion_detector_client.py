@@ -9,6 +9,9 @@ import time
 import os
 import ffmpeg
 
+TIMER_VALUE = 100  # circa 5 secondi
+MINIMUM_AREA = 500
+
 host = "127.0.0.1"
 port = 1883
 topic = "Video"
@@ -17,7 +20,7 @@ prev_frame = None
 frame = None
 text = "Libero"
 active = False
-timer = 50 # 5 secondi
+timer = TIMER_VALUE
 
 # signal handler
 stop = False
@@ -56,7 +59,7 @@ def modify_frame():
     # cicla sui contorni
     for c in cnts:
         # se il contorno e' troppo piccolo, ignoralo
-        if cv.contourArea(c) < 500: # minimum area size
+        if cv.contourArea(c) < MINIMUM_AREA: # minimum area size
             continue
         # calcola la bounding box per il contorno, disegnala sul frame,
         # aggiorna il testo
@@ -84,7 +87,7 @@ def stream():
         modify_frame()
         if text == "Occupato":
             active = True
-            timer = 50
+            timer = TIMER_VALUE
             # send frame
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
             mqttc.publish(topic, frame_str)
@@ -94,7 +97,7 @@ def stream():
             timer -= 1
             if timer == 0:
                 active = False
-                timer = 50
+                timer = TIMER_VALUE
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.connect(host, port)

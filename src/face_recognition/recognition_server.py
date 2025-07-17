@@ -1,10 +1,11 @@
 from time import time
-from datetime import datetime
-import face_recognition
+import datetime
 import os
 import signal
 import paho.mqtt.client as mqtt
 import sys
+import psycopg2
+import face_recognition
 
 # Inizializzazione variabili immagini
 known_encodings_buffer = []
@@ -12,16 +13,20 @@ known_encodings_buffer = []
 # Inserire percorso delle immagini note (specificando il nome della persona)
 known_image = face_recognition.load_image_file("Images/ezio_greggio.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
-known_encodings_buffer += [(known_encoding, "Ezio Greggio")]
+known_encodings_buffer += [(known_encoding, "Ezio Greggio", "1234567890")]
 
 known_image = face_recognition.load_image_file("Images/alberto_angela.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
-known_encodings_buffer += [(known_encoding, "Alberto Angela")]
+known_encodings_buffer += [(known_encoding, "Alberto Angela", "1122334455")]
+
+known_image = face_recognition.load_image_file("Images/gerry_scotti.jpg")
+known_encoding = face_recognition.face_encodings(known_image)[0]
+known_encodings_buffer += [(known_encoding, "Gerry Scotti", "0000011111")]
 
 # Inizializzazione contatore persone, time e intervallo
-count = 0
 dest = "Images/captured_image.png"
 presents = []
+current_time = (datetime.datetime.now()).strftime("%Y-%m-%d %H:00:00")
 
 # Inizializzazione dati connessione
 flag_is_connected = False
@@ -41,6 +46,17 @@ def handle_signal(signum, frame):
 
 signal.signal(signal.SIGINT, handle_signal)
 
+# connessione al database
+conn = psycopg2.connect(
+    dbname="Iot",
+    user="postgres",
+    password="vivamilan04",
+    host="127.0.0.1",
+    port="5432"
+)
+cur = conn.cursor()
+print("Connected to database Iot")
+
 def on_publish(client, userdata, mid, reason_code, properties):
     print("Risposta inviata (%d)" %mid)
     
@@ -59,8 +75,17 @@ def on_connect(client, userdata, flags, reason_code, properties):
     else:
         client.subscribe("Images", qos)
 
+def update_db_Accessi(giorno, ora, idpersona):
+    cur.execute("""
+                INSERT INTO "Accessi"(data, ora, persona)
+                VALUES (%s, %s, %s)
+                ON CONFLICT (data, persona) DO NOTHING
+                """, (giorno, ora, idpersona,))
+    conn.commit()
+    print(f"[✓] Ingresso registrato nel database")
+
 def compute_and_send():
-    global results, recieved, count, dest, presents
+    global results, recieved, dest, presents, current_time
     # exited from loop, image recieved
     recieved = False
     # creazione dati immagine sconosciuta
@@ -78,15 +103,21 @@ def compute_and_send():
         # creazione risposta
         for encoding in known_encodings_buffer:
             answer = face_recognition.compare_faces([encoding[0]], unknown_encoding)
-            if answer:
+            if answer[0]:
                 name = encoding[1]
+                idpersona = encoding[2]
                 break
         if answer[0]:
             results = ("Si", name)
-            if name not in presents:
-                presents += [name]
-                count += 1
-            # TODO carica nel db count e timestamp (ora)
+            data = datetime.datetime.now()
+            ora = data.strftime("%H:00:00")
+            giorno = data.strftime("%Y-%m-%d")
+            data = data.strftime("%Y-%m-%d %H:00:00")
+            if current_time != data:
+                current_time = data
+            #if idpersona not in presents:
+            #    presents += [idpersona]
+            update_db_Accessi(giorno, ora, idpersona)
         else:
             results = ("No", "")
             # TODO carica nel db dati persona sconosciuta e immagine nel file system
@@ -111,3 +142,7 @@ while not stop:
     if recieved:
         compute_and_send()
 mqttc.loop_stop() # fine loop
+
+# chiusura connessione database
+cur.close()
+conn.close()
