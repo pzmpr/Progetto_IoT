@@ -16,8 +16,3 @@
   - registra video solamente quando riconosce movimento (si disattiva dopo 5 secondi se non rileva piu' movimento)
   - comprime e salva video in /Videos
   - per fermare il programma: q. Per uscire e scartare il video: z
-
-## To do:
-  - implementare database con codice
-  - fare in modo che una persona non venga riconosciuta 2 volte lo stesso giorno
-  - resettare count quando cambia giorno
