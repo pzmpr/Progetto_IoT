@@ -9,20 +9,22 @@ import sys
 # Inizializzazione webcam
 cam = cv.VideoCapture(0)
 
-# Variabili per intervallo di tempo
+# Inizializzazione contatore persone, time e intervallo
+count = 0
+presents = []
 previous = time()
 delta = 0
 
-# Variabili connessione mqtt
+# Inizializzazione dati connessione
+flag_is_connected = False
 qos = 2
 host = "127.0.0.1"
 port = 1883
-topic1 = "Results/answer"
-topic2 = "Results/name"
 recieved_ans = False
 recieved_nm  = False
 results = ""
-name = ""
+names = ""
+
 
 # signal handler
 stop = False
@@ -30,7 +32,7 @@ stop = False
 def handle_signal(signum, frame):
     global stop
     stop = True
-    print("\nUscita...")
+    print("\nExiting...")
 
 signal.signal(signal.SIGINT, handle_signal)
 
@@ -38,26 +40,27 @@ def on_publish(client, userdata, mid, reason_code, properties):
     print('Foto inviata (%d)' %mid)
     
 def on_message(client, userdata, message):
-    global results, name, recieved_ans, recieved_nm
-    if message.topic == topic1:
+    global results, names, recieved_ans, recieved_nm
+    if message.topic == "Results/answer":
         results = str(message.payload.decode("utf-8"))
         recieved_ans = True
-    if message.topic == topic2:
-        name = str(message.payload.decode("utf-8"))
+    if message.topic == "Results/name":
+        names = str(message.payload.decode("utf-8"))
         recieved_nm = True
     
 def on_connect(client, userdata, flags, reason_code, properties):
     global topic, qos
     if reason_code.is_failure:
-        print(f"\nImpossibile connettersi al broker: {reason_code}.")
+        print(f"\nFailed to connect: {reason_code}.")
     else:
-        client.subscribe(topic1, qos)
-        client.subscribe(topic2, qos)
+        client.subscribe('Results/answer',qos)
+        client.subscribe('Results/name',qos)
 
 def print_results():
-    global recieved_ans, recieved_nm, results, name, dest
+    global recieved_ans, recieved_nm, results, names, presents, dest, count
     recieved_ans = False
     recieved_nm = False
+    name = names
     if results == "NA":
         print("Non e' stato riconosciuto alcun volto")
     elif results == "Si":
@@ -75,7 +78,7 @@ mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
 mqttc.connect(host, port)
-mqttc.loop_start()
+mqttc.loop_start() # inizio loop
 while not stop: 
     current = time()
     delta += current - previous
@@ -106,6 +109,6 @@ while not stop:
     try:
         os.remove(dest)
     except: pass
-mqttc.loop_stop()
+mqttc.loop_stop() # fine loop
 
 cam.release()
