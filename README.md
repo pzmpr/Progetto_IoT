@@ -2,13 +2,13 @@
 ## Note:
   - installare librerie python presenti nel file **requirements.txt**
 
-## Cosa fa recognition_full.py:
+## Face recognition:
   - scatta foto utilizzando la telecamera del dispositivo
   - scatta foto ogni 3 sec e riconosce le somglianze dall'immagine salvata in memoria (le foto vengono poi cancellate)
   - riconosce somiglianze tra volti presenti in due immagini e risponde dicendo se sono lo stesso volto (con il nome della persona)
   - per fermare il programma: CTRL-C
 
-## Cosa fa motion_detector.py
+## Recording
   - visualizza un video (telecamera o file)
   - calcola i cambiamenti avvenuti dal frame iniziale
   - riconosce gli oggetti che si sono mossi
