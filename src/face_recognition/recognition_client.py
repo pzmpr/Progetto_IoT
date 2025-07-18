@@ -30,7 +30,7 @@ stop = False
 def handle_signal(signum, frame):
     global stop
     stop = True
-    print("\nExiting...")
+    print("\nUscita...")
 
 signal.signal(signal.SIGINT, handle_signal)
 
@@ -49,7 +49,7 @@ def on_message(client, userdata, message):
 def on_connect(client, userdata, flags, reason_code, properties):
     global topic, qos
     if reason_code.is_failure:
-        print(f"\nFailed to connect: {reason_code}.")
+        print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
         client.subscribe(topic1, qos)
         client.subscribe(topic2, qos)

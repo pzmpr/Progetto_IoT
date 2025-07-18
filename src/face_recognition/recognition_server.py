@@ -71,7 +71,7 @@ def on_message(client, userdata, message):
 def on_connect(client, userdata, flags, reason_code, properties):
     global topic, qos
     if reason_code.is_failure:
-        print(f"\nImpossibile connettersi: {reason_code}.")
+        print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
         client.subscribe(topic, qos)
 
