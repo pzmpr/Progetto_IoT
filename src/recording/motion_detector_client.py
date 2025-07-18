@@ -10,15 +10,12 @@ import os
 import ffmpeg
 
 TIMER_VALUE = 100  # circa 5 secondi
-MINIMUM_AREA = 500 # area minima bounding box
-TOLLERANZA = 50    # tolleranza rilevamento di movimento
+MINIMUM_AREA = 500
 
-# Variabili connessione mqtt
 host = "127.0.0.1"
 port = 1883
 topic = "Video"
 
-# Variabili per stream video e rilevamento di movimento
 prev_frame = None
 frame = None
 text = "Libero"
@@ -31,39 +28,45 @@ stop = False
 def handle_signal(signum, frame):
     global stop
     stop = True
-    print("\nUscita...")
+    print("\nExiting...")
 
 signal.signal(signal.SIGINT, handle_signal)
 
 def modify_frame():
-    global frame, prev_frame, text
+    global frame, prev_frame, text, active, timer
+    
     text = "Libero"
     # scala il frame, convertilo a scala di grigi, sfuoca
     frame = cv.resize(frame, (640,480))
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray = cv.GaussianBlur(gray, (21, 21), 0)
+    
     # se il primo frame e' None, inizializzalo
     if prev_frame is None:
         prev_frame = gray
+
     # calcola il valore assoluto della differenza tra il frame attuale e quello precedente
-    frame_delta = cv.absdiff(prev_frame, gray)
+    frameDelta = cv.absdiff(prev_frame, gray)
     # aggiorna il frame precedente con l'ultimo frame
     prev_frame = gray
-    thresh = cv.threshold(frame_delta, TOLLERANZA, 255, cv.THRESH_BINARY)[1]
-    # dilata l'immagine soglia per riempire i buchi, poi trova i contorni nell'immagine soglia
-    thresh = cv.dilate(thresh, None, iterations = 2)
+    thresh = cv.threshold(frameDelta, 50, 255, cv.THRESH_BINARY)[1] # NOTE: cambia secondo argomento se riconosce micromovimenti
+    # dilata l'immagine soglia per riempire i buchi, poi trova i contorni
+    # nell'immagine soglia
+    thresh = cv.dilate(thresh, None, iterations=2)
     cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL,
         cv.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)  
     # cicla sui contorni
     for c in cnts:
         # se il contorno e' troppo piccolo, ignoralo
-        if cv.contourArea(c) < MINIMUM_AREA:
+        if cv.contourArea(c) < MINIMUM_AREA: # minimum area size
             continue
-        # calcola la bounding box per il contorno, disegnala sul frame, aggiorna il testo
+        # calcola la bounding box per il contorno, disegnala sul frame,
+        # aggiorna il testo
         (x, y, w, h) = cv.boundingRect(c)
         cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Occupato"
+
     # scrittura stato della stanza e timestamp
     cv.putText(frame, "Stato: {}".format(text), (10, 20),
         cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
@@ -75,10 +78,10 @@ def start_streaming():
 
 def stream():
     global frame, active, timer, text, mqttc
-    print("Streaming avviato")
+    print("Streaming from video source : 0")
     while not stop:
         _ , frame = cam.read()
-        # se non c'e' alcun frame, lo stream e' finito
+         # se non c'e' alcun frame, lo stream e' finito
         if frame is None:
             return
         modify_frame()
@@ -96,13 +99,11 @@ def stream():
                 active = False
                 timer = TIMER_VALUE
 
-
-
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.connect(host, port)
 cam = cv.VideoCapture(0)
 
 streaming_thread = threading.Thread(target=stream())
 
-# chiusura telecamera
+# pulizia finestre / chiusura telecamera
 cam.release()
