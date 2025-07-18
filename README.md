@@ -18,3 +18,4 @@
   - file html in /templates
   - comprime e salva video in /Videos
   - per fermare il programma: CTRL-C
+  - per chiudere il processo (ubuntu): sudo kill -9 `sudo lsof -t -i:8000`
