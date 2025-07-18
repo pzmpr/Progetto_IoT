@@ -128,8 +128,9 @@ def compute_and_send():
         else:
             results = ("No", "")
             print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
+            # controlla che il volto non sia quello dell'immagine precedente
             if prev_encoding is None:
-                update_db_Sconosciuti()  
+                update_db_Sconosciuti()
             elif not (face_recognition.compare_faces([prev_encoding], unknown_encoding))[0]:
                 update_db_Sconosciuti()
             else:
