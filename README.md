@@ -24,7 +24,7 @@
     
           pip install -r requirements.txt
   - creare il database con il file **DB_iot.txt** su OneDrive
-  - connettersi al database postgresql (127.0.0.1:5432)
+  - aprire la connessione al database postgresql (127.0.0.1:5432)
   - [opzionale] aggiungere dati utenti riconosciuti nel database e in **recognition_server.py** e rispettive immagini nella directory /Images
   - creare la dashboard su grafana importando il file **dashboard_grafana_iot.json**
   - configurare la connessione del database nei file **_server**
