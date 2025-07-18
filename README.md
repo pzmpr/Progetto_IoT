@@ -1,8 +1,6 @@
 # Progetto IoT
 ## Note:
-  - installare librerie python presenti nel file **requirements.txt**
   - face_recognition funziona solo su linux
-  - configurare la connessione del database nei file **_server**
 
 ## Face recognition:
   - scatta foto utilizzando la telecamera del dispositivo
@@ -20,3 +18,13 @@
   - file html in /templates
   - comprime e salva video in /Videos
   - per fermare il programma: CTRL-C
+
+## Setup
+  - installare librerie python presenti nel file **requirements.txt**
+    
+          pip install -r requirements.txt
+  - creare il database con il file **DB_iot.txt** su OneDrive
+  - connettersi al database postgresql (127.0.0.1:5432)
+  - creare la dashboard su grafana importando il file **dashboard_grafana_iot.json**
+  - configurare la connessione del database nei file **_server**
+  - eseguire gli script python nelle rispettive directory
