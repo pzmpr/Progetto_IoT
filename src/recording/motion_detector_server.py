@@ -99,11 +99,12 @@ def compress_video(dest, date):
     print("Compressione video...")
     result = ffmpeg.input(dest)
     dest = "Videos/rec-"+date
+    i = 1
     if os.path.exists(dest+".mp4"):
-        i = 1
         while os.path.exists(f"{dest}({i}).mp4"):
             i += 1
-        dest = (f"{dest}({i}).mp4")
+        dest = (f"{dest}({i})")
+    dest = dest + ".mp4"
     result = ffmpeg.output(result, dest, bitrate='800k', loglevel='quiet')
     ffmpeg.run(result, overwrite_output = True)
 
@@ -136,11 +137,11 @@ def video_feed():
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect  # callback function
-mqttc.message_callback_add(topic, on_message)
+mqttc.on_message = on_message
 mqttc.connect(host,port)  # connessione broker
 
 t = threading.Thread(target=subscribe) # thread per subscribe
 t.start()
 
-app.run(host="0.0.0.0", port=8000, debug=True,
+app.run(host=host, port=8000, debug=False,
         threaded=True, use_reloader=False)
