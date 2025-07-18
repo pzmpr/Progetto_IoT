@@ -85,7 +85,7 @@ def stream():
         if text == "Occupato":
             active = True
             timer = TIMER_VALUE
-            # send frame
+            # invia frame
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
             mqttc.publish(topic, frame_str)
         elif active:
