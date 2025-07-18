@@ -19,7 +19,7 @@ dest = "Videos/rec-" + date + ".avi"
 
 # Variabili per stream video
 fourcc = cv.VideoWriter_fourcc(*'DIVX')
-out = cv.VideoWriter(dest, fourcc, 20, (640,  480))
+out = cv.VideoWriter(dest, fourcc, 10, (640,  480))
 prev_frame = None
 frame = None
 output_frame = None
@@ -32,7 +32,7 @@ app = Flask(__name__)
 host = "127.0.0.1"
 port = 1883
 topic = "Video"
-qos = 2
+qos = 0
 
 # signal handler
 stop = False
@@ -82,6 +82,7 @@ def subscribe():
     compress_video(dest, date)
     os.remove(dest)
     print("Video compresso")
+    os._exit(0)
 
 def update_db_Registrazioni(data):
     nome = "rec-" + data
@@ -98,7 +99,13 @@ def update_db_Registrazioni(data):
 def compress_video(dest, date):
     print("Compressione video...")
     result = ffmpeg.input(dest)
-    result = ffmpeg.output(result, "Videos/rec-"+date+".mp4", bitrate='800k', loglevel='quiet')
+    dest = "Videos/rec-"+date
+    if os.path.exists(dest+".mp4"):
+        i = 1
+        while os.path.exists(f"{dest}({i}).mp4"):
+            i += 1
+        dest = (f"{dest}({i}).mp4")
+    result = ffmpeg.output(result, dest, bitrate='800k', loglevel='quiet')
     ffmpeg.run(result, overwrite_output = True)
 
 # genera i frame per lo stream nella pagina web

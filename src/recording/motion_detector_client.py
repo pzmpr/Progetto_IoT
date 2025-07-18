@@ -31,7 +31,7 @@ stop = False
 def handle_signal(signum, frame):
     global stop
     stop = True
-    print("\nExiting...")
+    print("\nUscita...")
 
 signal.signal(signal.SIGINT, handle_signal)
 
