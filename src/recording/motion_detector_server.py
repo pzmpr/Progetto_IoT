@@ -113,7 +113,6 @@ def generate():
     while True:
         with lock:
             if output_frame is None:
-                # time.sleep(0.1)
                 continue
             # codifica il frame in formatp JPEG
             (flag, encodedImage) = cv.imencode(".jpg", output_frame)
