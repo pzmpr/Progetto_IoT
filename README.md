@@ -1,6 +1,8 @@
 # Progetto IoT
 ## Note:
   - installare librerie python presenti nel file **requirements.txt**
+  - face_recognition funziona solo su linux
+  - inserire password dell'utente del database nei file **_server**
 
 ## Face recognition:
   - scatta foto utilizzando la telecamera del dispositivo
