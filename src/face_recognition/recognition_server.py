@@ -9,6 +9,7 @@ import face_recognition
 
 # Inizializzazione variabili immagini
 known_encodings_buffer = []
+prev_encoding = None
 
 # Inserire percorso delle immagini note (specificando id e nome della persona)
 known_image = face_recognition.load_image_file("Images/ezio_greggio.jpg")
@@ -96,7 +97,7 @@ def update_db_Sconosciuti():
 
 # Analizza l'immagine ricevuta e invia la risposta
 def compute_and_send():
-    global results, dest, current_time
+    global results, dest, current_time, prev_encoding
     unknown_image = face_recognition.load_image_file(dest)
     # non sono stati riconosciuti volti nell'immagine
     if( len(face_recognition.face_encodings(unknown_image)) == 0 ):
@@ -119,15 +120,23 @@ def compute_and_send():
             current_time = (datetime.datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
             giorno = current_time[:10]
             ora = current_time[11:]
+            print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
             update_db_Accessi(giorno, ora, idpersona)
             try:
                 os.remove(dest)
             except: pass
         else:
             results = ("No", "")
-            update_db_Sconosciuti()
-        print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
-
+            print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
+            if prev_encoding is None:
+                update_db_Sconosciuti()  
+            elif not (face_recognition.compare_faces([prev_encoding], unknown_encoding))[0]:
+                update_db_Sconosciuti()
+            else:
+                try:
+                    os.remove(dest)
+                except: pass
+            prev_encoding = unknown_encoding
     mqttc.publish("Results/answer", results[0])
     mqttc.publish("Results/name", results[1])
 
