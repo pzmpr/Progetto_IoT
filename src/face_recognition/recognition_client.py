@@ -9,22 +9,20 @@ import sys
 # Inizializzazione webcam
 cam = cv.VideoCapture(0)
 
-# Inizializzazione contatore persone, time e intervallo
-count = 0
-presents = []
+# Variabili per intervallo di tempo
 previous = time()
 delta = 0
 
-# Inizializzazione dati connessione
-flag_is_connected = False
+# Variabili connessione mqtt
 qos = 2
 host = "127.0.0.1"
 port = 1883
+topic1 = "Results/answer"
+topic2 = "Results/name"
 recieved_ans = False
 recieved_nm  = False
 results = ""
-names = ""
-
+name = ""
 
 # signal handler
 stop = False
@@ -40,12 +38,12 @@ def on_publish(client, userdata, mid, reason_code, properties):
     print('Foto inviata (%d)' %mid)
     
 def on_message(client, userdata, message):
-    global results, names, recieved_ans, recieved_nm
-    if message.topic == "Results/answer":
+    global results, name, recieved_ans, recieved_nm
+    if message.topic == topic1:
         results = str(message.payload.decode("utf-8"))
         recieved_ans = True
-    if message.topic == "Results/name":
-        names = str(message.payload.decode("utf-8"))
+    if message.topic == topic2:
+        name = str(message.payload.decode("utf-8"))
         recieved_nm = True
     
 def on_connect(client, userdata, flags, reason_code, properties):
@@ -53,14 +51,13 @@ def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code.is_failure:
         print(f"\nFailed to connect: {reason_code}.")
     else:
-        client.subscribe('Results/answer',qos)
-        client.subscribe('Results/name',qos)
+        client.subscribe(topic1, qos)
+        client.subscribe(topic2, qos)
 
 def print_results():
-    global recieved_ans, recieved_nm, results, names, presents, dest, count
+    global recieved_ans, recieved_nm, results, name, dest
     recieved_ans = False
     recieved_nm = False
-    name = names
     if results == "NA":
         print("Non e' stato riconosciuto alcun volto")
     elif results == "Si":
@@ -78,7 +75,7 @@ mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
 mqttc.connect(host, port)
-mqttc.loop_start() # inizio loop
+mqttc.loop_start()
 while not stop: 
     current = time()
     delta += current - previous
@@ -109,6 +106,6 @@ while not stop:
     try:
         os.remove(dest)
     except: pass
-mqttc.loop_stop() # fine loop
+mqttc.loop_stop()
 
 cam.release()
