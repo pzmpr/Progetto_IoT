@@ -16,7 +16,7 @@ TOLLERANZA = 50    # tolleranza rilevamento di movimento
 # Variabili connessione mqtt
 host = "127.0.0.1"
 port = 1883
-topic = "Video"
+topic = "Videos"
 
 # Variabili per stream video e rilevamento di movimento
 prev_frame = None
