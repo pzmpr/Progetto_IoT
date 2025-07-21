@@ -90,7 +90,7 @@ while not stop:
         img = open(dest, "rb")
         fileContent = img.read()
         byteArr = bytearray(fileContent)
-        mqttc.publish("Images/Content", byteArr)
+        mqttc.publish("Images/content", byteArr)
         img.close()
         
         if recieved_ans and recieved_nm:
