@@ -17,8 +17,8 @@ delta = 0
 qos = 2
 host = "127.0.0.1"
 port = 1883
-topic1 = "Results/answer"
-topic2 = "Results/name"
+topic1 = "Images/Results/answer"
+topic2 = "Images/Results/name"
 recieved_ans = False
 recieved_nm  = False
 results = ""
@@ -90,7 +90,7 @@ while not stop:
         img = open(dest, "rb")
         fileContent = img.read()
         byteArr = bytearray(fileContent)
-        mqttc.publish("Images", byteArr)
+        mqttc.publish("Images/Content", byteArr)
         img.close()
         
         if recieved_ans and recieved_nm:
