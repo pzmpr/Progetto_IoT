@@ -32,7 +32,7 @@ dest = None
 qos = 2
 host = "127.0.0.1"
 port = 1883
-topic = "Images"
+topic = "Images/content"
 results = ("","")
 
 # signal handler
@@ -138,8 +138,8 @@ def compute_and_send():
                     os.remove(dest)
                 except: pass
             prev_encoding = unknown_encoding
-    mqttc.publish("Results/answer", results[0])
-    mqttc.publish("Results/name", results[1])
+    mqttc.publish("Images/Results/answer", results[0])
+    mqttc.publish("Images/Results/name", results[1])
 
 
 
