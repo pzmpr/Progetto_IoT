@@ -31,7 +31,7 @@ app = Flask(__name__)
 # Variabili connessione mqtt
 host = "127.0.0.1"
 port = 1883
-topic = "Video"
+topic = "Videos"
 qos = 0
 
 # signal handler
