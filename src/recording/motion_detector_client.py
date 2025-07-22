@@ -74,7 +74,7 @@ def start_streaming():
     streaming_thread.start()
 
 def stream():
-    global frame, active, timer, text, mqttc
+    global frame, active, timer, text, mqttc, topic
     print("Streaming avviato")
     while not stop:
         _ , frame = cam.read()
