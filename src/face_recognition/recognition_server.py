@@ -32,7 +32,9 @@ dest = None
 qos = 2
 host = "127.0.0.1"
 port = 1883
-topic = "Images/content"
+sub-topic = "Images/content"
+pub-topic1 = "Images/Results/answer"
+pub-topic2 = "Images/Results/name"
 results = ("","")
 
 # signal handler
@@ -70,11 +72,11 @@ def on_message(client, userdata, message):
     compute_and_send()
     
 def on_connect(client, userdata, flags, reason_code, properties):
-    global topic, qos
+    global sub-topic, qos
     if reason_code.is_failure:
         print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
-        client.subscribe(topic, qos)
+        client.subscribe(sub-topic, qos)
 
 def update_db_Accessi(giorno, ora, idpersona):
     cur.execute("""
@@ -97,7 +99,7 @@ def update_db_Sconosciuti():
 
 # Analizza l'immagine ricevuta e invia la risposta
 def compute_and_send():
-    global results, dest, current_time, prev_encoding
+    global results, dest, current_time, prev_encoding, pub-topic1, pub-topic2
     unknown_image = face_recognition.load_image_file(dest)
     # non sono stati riconosciuti volti nell'immagine
     if( len(face_recognition.face_encodings(unknown_image)) == 0 ):
@@ -138,8 +140,8 @@ def compute_and_send():
                     os.remove(dest)
                 except: pass
             prev_encoding = unknown_encoding
-    mqttc.publish("Images/Results/answer", results[0])
-    mqttc.publish("Images/Results/name", results[1])
+    mqttc.publish(pub-topic1, results[0])
+    mqttc.publish(pub-topic2, results[1])
 
 
 
