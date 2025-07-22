@@ -39,21 +39,21 @@ def on_publish(client, userdata, mid, reason_code, properties):
     print('Foto inviata (%d)' %mid)
     
 def on_message(client, userdata, message):
-    global results, name, recieved_ans, recieved_nm
-    if message.topic == topic1:
+    global results, name, recieved_ans, recieved_nm, sub-topic1, sub-topic2
+    if message.topic == sub-topic1:
         results = str(message.payload.decode("utf-8"))
         recieved_ans = True
-    if message.topic == topic2:
+    if message.topic == sub-topic2:
         name = str(message.payload.decode("utf-8"))
         recieved_nm = True
     
 def on_connect(client, userdata, flags, reason_code, properties):
-    global topic, qos
+    global sub-topic, qos
     if reason_code.is_failure:
         print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
-        client.subscribe(topic1, qos)
-        client.subscribe(topic2, qos)
+        client.subscribe(sub-topic1, qos)
+        client.subscribe(sub-topic2, qos)
 
 def print_results():
     global recieved_ans, recieved_nm, results, name, dest
