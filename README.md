@@ -1,6 +1,6 @@
 # Progetto IoT
 ## Note:
-  - face_recognition funziona solo su linux
+  - face_recognition funziona solo su linux e macos
 
 ## Face recognition:
   - scatta foto utilizzando la telecamera del dispositivo
