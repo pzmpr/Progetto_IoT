@@ -29,10 +29,10 @@ current_time = None
 dest = None
 
 # Variabili connessione mqtt
-qos = 2
+qos  = 2
 host = "127.0.0.1"
 port = 1883
-sub_topic = "Images/content"
+sub_topic  = "Images/content"
 pub_topic1 = "Images/Results/answer"
 pub_topic2 = "Images/Results/name"
 results = ("","")
@@ -54,11 +54,11 @@ def remove_file(dest):
 
 # Connessione al database
 conn = psycopg2.connect(
-    dbname = "Iot",
-    user = "postgres",
+    dbname   = "Iot",
+    user     = "postgres",
     password = "",
-    host = host,
-    port = "5432"
+    host     = host,
+    port     = "5432"
 )
 cur = conn.cursor()
 print("Connesso al database Iot")
