@@ -41,6 +41,11 @@ def handle_signal(signum, frame):
 
 signal.signal(signal.SIGINT, handle_signal)
 
+def remove_file(dest):
+    try:
+        os.remove(dest)
+    except: pass
+
 # connessione al database
 conn = psycopg2.connect(
     dbname = "Iot",
@@ -77,7 +82,7 @@ def subscribe():
     cur.close()
     conn.close()
     compress_video(dest, date)
-    os.remove(dest)
+    remove_file(dest)
     print("Video compresso")
     os._exit(0)
 
