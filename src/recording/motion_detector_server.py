@@ -15,21 +15,21 @@ date = str(datetime.date.today())
 dest = "Videos/rec-" + date + ".avi"
 
 # Variabili per stream video
-fourcc = cv.VideoWriter_fourcc(*'DIVX')
-out = cv.VideoWriter(dest, fourcc, 10, (640,  480))
-prev_frame = None
-frame = None
+fourcc       = cv.VideoWriter_fourcc(*'DIVX')
+out          = cv.VideoWriter(dest, fourcc, 10, (640,  480))
+prev_frame   = None
+frame        = None
 output_frame = None
 
 # Variabili per thread e connessione pagina web
 lock = threading.Lock()
-app = Flask(__name__)
+app  = Flask(__name__)
 
 # Variabili connessione mqtt
-host = "127.0.0.1"
-port = 1883
+host  = "127.0.0.1"
+port  = 1883
 topic = "Videos"
-qos = 0
+qos   = 0
 
 # signal handler
 stop = False
@@ -48,11 +48,11 @@ def remove_file(dest):
 
 # connessione al database
 conn = psycopg2.connect(
-    dbname = "Iot",
-    user = "postgres",
-    password = "",
-    host = host,
-    port = "5432"
+    dbname   = "Iot",
+    user     = "postgres",
+    password = "1234",
+    host     = host,
+    port     = "5432"
 )
 cur = conn.cursor()
 print("Connesso al database Iot")
@@ -81,6 +81,7 @@ def subscribe():
     # chiusura connessione database
     cur.close()
     conn.close()
+    # compressione video
     compress_video(dest, date)
     remove_file(dest)
     print("Video compresso")
@@ -140,7 +141,7 @@ def video_feed():
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_connect = on_connect  # callback function
 mqttc.on_message = on_message
-mqttc.connect(host,port)  # connessione broker
+mqttc.connect(host,port)       # connessione broker
 
 t = threading.Thread(target=subscribe) # thread per subscribe
 t.start()
