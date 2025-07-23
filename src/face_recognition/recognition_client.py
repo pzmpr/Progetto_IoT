@@ -14,16 +14,16 @@ previous = time()
 delta = 0
 
 # Variabili connessione mqtt
-qos = 2
+qos  = 2
 host = "127.0.0.1"
 port = 1883
 sub_topic1 = "Images/Results/answer"
 sub_topic2 = "Images/Results/name"
-pub_topic = "Images/content"
+pub_topic  = "Images/content"
 recieved_ans = False
 recieved_nm  = False
 results = ""
-name = ""
+name    = ""
 
 # signal handler
 stop = False
@@ -35,6 +35,11 @@ def handle_signal(signum, frame):
 
 signal.signal(signal.SIGINT, handle_signal)
 
+def remove_file(dest):
+    try:
+        os.remove(dest)
+    except: pass
+    
 def on_publish(client, userdata, mid, reason_code, properties):
     print('Foto inviata (%d)' %mid)
     
@@ -104,9 +109,7 @@ while not stop:
         cam.grab()
         cam.grab()
         cam.grab()
-    try:
-        os.remove(dest)
-    except: pass
+    remove_file(dest)
 mqttc.loop_stop()
 
 cam.release()
