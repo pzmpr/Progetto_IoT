@@ -17,9 +17,9 @@ delta = 0
 qos = 2
 host = "127.0.0.1"
 port = 1883
-sub-topic1 = "Images/Results/answer"
-sub-topic2 = "Images/Results/name"
-pub-topic = "Images/content"
+sub_topic1 = "Images/Results/answer"
+sub_topic2 = "Images/Results/name"
+pub_topic = "Images/content"
 recieved_ans = False
 recieved_nm  = False
 results = ""
@@ -39,21 +39,21 @@ def on_publish(client, userdata, mid, reason_code, properties):
     print('Foto inviata (%d)' %mid)
     
 def on_message(client, userdata, message):
-    global results, name, recieved_ans, recieved_nm, sub-topic1, sub-topic2
-    if message.topic == sub-topic1:
+    global results, name, recieved_ans, recieved_nm, sub_topic1, sub_topic2
+    if message.topic == sub_topic1:
         results = str(message.payload.decode("utf-8"))
         recieved_ans = True
-    if message.topic == sub-topic2:
+    if message.topic == sub_topic2:
         name = str(message.payload.decode("utf-8"))
         recieved_nm = True
     
 def on_connect(client, userdata, flags, reason_code, properties):
-    global sub-topic, qos
+    global sub_topic, qos
     if reason_code.is_failure:
         print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
-        client.subscribe(sub-topic1, qos)
-        client.subscribe(sub-topic2, qos)
+        client.subscribe(sub_topic1, qos)
+        client.subscribe(sub_topic2, qos)
 
 def print_results():
     global recieved_ans, recieved_nm, results, name, dest
@@ -91,7 +91,7 @@ while not stop:
         img = open(dest, "rb")
         fileContent = img.read()
         byteArr = bytearray(fileContent)
-        mqttc.publish(pub-topic, byteArr)
+        mqttc.publish(pub_topic, byteArr)
         img.close()
         
         if recieved_ans and recieved_nm:
