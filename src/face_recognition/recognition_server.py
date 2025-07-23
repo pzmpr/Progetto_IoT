@@ -47,11 +47,16 @@ def handle_signal(signum, frame):
 
 signal.signal(signal.SIGINT, handle_signal)
 
+def remove_file(dest):
+    try:
+        os.remove(dest)
+    except: pass
+
 # Connessione al database
 conn = psycopg2.connect(
     dbname = "Iot",
     user = "postgres",
-    password = "",
+    password = "1234",
     host = host,
     port = "5432"
 )
@@ -105,9 +110,7 @@ def compute_and_send():
     if( len(face_recognition.face_encodings(unknown_image)) == 0 ):
         print("Non e' stato riconosciuto alcun volto")
         results = ("NA", "NA")
-        try:
-            os.remove(dest)
-        except: pass
+        remove_file(dest)
     # ci sono volti nell'immagine
     else:
         unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
@@ -124,9 +127,7 @@ def compute_and_send():
             ora = current_time[11:]
             print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
             update_db_Accessi(giorno, ora, idpersona)
-            try:
-                os.remove(dest)
-            except: pass
+            remove_file(dest)
         else:
             results = ("No", "")
             print("L'immagine sconosciuta e' quella di una persona conosciuta:", results[0])
@@ -136,9 +137,7 @@ def compute_and_send():
             elif not (face_recognition.compare_faces([prev_encoding], unknown_encoding))[0]:
                 update_db_Sconosciuti()
             else:
-                try:
-                    os.remove(dest)
-                except: pass
+                remove_file(dest)
             prev_encoding = unknown_encoding
     mqttc.publish(pub_topic1, results[0])
     mqttc.publish(pub_topic2, results[1])
