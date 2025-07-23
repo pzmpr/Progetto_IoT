@@ -1,13 +1,10 @@
 import cv2 as cv
 import threading
 import paho.mqtt.client as mqtt
-import argparse
 import datetime
 import signal
 import imutils
-import time
 import os
-import ffmpeg
 
 TIMER_VALUE = 100  # circa 5 secondi
 MINIMUM_AREA = 500 # area minima bounding box
