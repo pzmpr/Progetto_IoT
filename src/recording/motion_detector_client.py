@@ -6,21 +6,21 @@ import signal
 import imutils
 import os
 
-TIMER_VALUE = 100  # circa 5 secondi
-MINIMUM_AREA = 500 # area minima bounding box
-TOLLERANZA = 50    # tolleranza rilevamento di movimento
+TIMER_VALUE  = 100  # circa 5 secondi
+MINIMUM_AREA = 500  # area minima bounding box
+TOLLERANZA   = 50   # tolleranza rilevamento di movimento
 
 # Variabili connessione mqtt
-host = "127.0.0.1"
-port = 1883
+host  = "127.0.0.1"
+port  = 1883
 topic = "Videos"
 
 # Variabili per stream video e rilevamento di movimento
 prev_frame = None
-frame = None
-text = "Libero"
-active = False
-timer = TIMER_VALUE
+frame      = None
+active     = False
+text       = "Libero"
+timer      = TIMER_VALUE
 
 # signal handler
 stop = False
