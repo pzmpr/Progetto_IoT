@@ -9,9 +9,10 @@ import sys
 # Inizializzazione webcam
 cam = cv.VideoCapture(0)
 
-# Variabili per intervallo di tempo
+# Variabili per intervallo di tempo o percorso file
 previous = time()
 delta = 0
+dest = None
 
 # Variabili connessione mqtt
 qos  = 2
@@ -39,7 +40,7 @@ def remove_file(dest):
     try:
         os.remove(dest)
     except: pass
-    
+
 def on_publish(client, userdata, mid, reason_code, properties):
     print('Foto inviata (%d)' %mid)
     
@@ -86,6 +87,7 @@ while not stop:
     current = time()
     delta += current - previous
     previous = current
+
     # cattura un frame ogni 5 secondi
     if delta > 5:
         ret, frame = cam.read()
@@ -110,6 +112,6 @@ while not stop:
         cam.grab()
         cam.grab()
     remove_file(dest)
-mqttc.loop_stop()
 
+mqttc.loop_stop()
 cam.release()
