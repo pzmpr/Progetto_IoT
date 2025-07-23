@@ -45,7 +45,7 @@ signal.signal(signal.SIGINT, handle_signal)
 conn = psycopg2.connect(
     dbname = "Iot",
     user = "postgres",
-    password = "1234",
+    password = "",
     host = host,
     port = "5432"
 )
