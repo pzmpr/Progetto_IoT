@@ -12,15 +12,15 @@ known_encodings_buffer = []
 prev_encoding = None
 
 # Inserire percorso delle immagini note (specificando id e nome della persona)
-known_image = face_recognition.load_image_file("Images/ezio_greggio.jpg")
+known_image = face_recognition.load_image_file("Images/1234567890.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
 known_encodings_buffer += [(known_encoding, "Ezio Greggio", "1234567890")]
 
-known_image = face_recognition.load_image_file("Images/alberto_angela.jpg")
+known_image = face_recognition.load_image_file("Images/1122334455.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
 known_encodings_buffer += [(known_encoding, "Alberto Angela", "1122334455")]
 
-known_image = face_recognition.load_image_file("Images/gerry_scotti.jpg")
+known_image = face_recognition.load_image_file("Images/0000011111.jpg")
 known_encoding = face_recognition.face_encodings(known_image)[0]
 known_encodings_buffer += [(known_encoding, "Gerry Scotti", "0000011111")]
 
