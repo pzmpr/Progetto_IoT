@@ -15,6 +15,8 @@ date = str(datetime.date.today())
 dest = "Videos/rec-" + date + ".avi"
 
 # Variabili per stream video
+if not os.path.exists("Videos"):
+    os.makedirs("Videos")
 fourcc       = cv.VideoWriter_fourcc(*'DIVX')
 out          = cv.VideoWriter(dest, fourcc, 10, (640,  480))
 prev_frame   = None
@@ -61,7 +63,7 @@ def remove_file(dest):
 conn = psycopg2.connect(
     dbname   = "Iot",
     user     = "postgres",
-    password = "1234",
+    password = "",
     host     = host,
     port     = "5432"
 )
