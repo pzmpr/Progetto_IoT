@@ -32,6 +32,7 @@ dest = None
 qos  = 2
 host = "127.0.0.1"
 port = 1883
+flag_is_connected = False
 sub_topic  = "Images/content"
 pub_topic1 = "Images/Results/answer"
 pub_topic2 = "Images/Results/name"
@@ -41,9 +42,12 @@ results = ("","")
 stop = False
 
 def handle_signal(signum, frame):
-    global stop
+    global stop, flag_is_connected
     stop = True
     print("\nUscita...")
+    if flag_is_connected:
+        mqttc.unsubscribe(sub_topic)
+        mqttc.disconnect()
 
 signal.signal(signal.SIGINT, handle_signal)
 
@@ -56,7 +60,7 @@ def remove_file(dest):
 conn = psycopg2.connect(
     dbname   = "Iot",
     user     = "postgres",
-    password = "",
+    password = "1234",
     host     = host,
     port     = "5432"
 )
@@ -77,11 +81,12 @@ def on_message(client, userdata, message):
     compute_and_send()
     
 def on_connect(client, userdata, flags, reason_code, properties):
-    global sub_topic, qos
+    global sub_topic, qos, flag_is_connected
     if reason_code.is_failure:
         print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
         client.subscribe(sub_topic, qos)
+        flag_is_connected = True
 
 def update_db_Accessi(giorno, ora, idpersona):
     cur.execute("""
@@ -150,9 +155,7 @@ mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
 mqttc.connect(host, port)
-while not stop:
-    mqttc.loop()
-mqttc.disconnect()
+mqttc.loop_forever()
 # chiusura connessione database
 cur.close()
 conn.close()
