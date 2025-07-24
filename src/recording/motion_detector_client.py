@@ -101,5 +101,6 @@ cam = cv.VideoCapture(0)
 
 streaming_thread = threading.Thread(target=stream())
 
+mqttc.disconnect()
 # chiusura telecamera
 cam.release()
