@@ -20,7 +20,7 @@
   - per fermare il programma: CTRL-C
 
 ## Setup
-  - installare librerie python presenti nel file **requirements.txt**
+  - installare librerie python presenti nel file **requirements.txt** (se dlib dà problemi installare cmake senza pip)
     
           pip install -r requirements.txt
   - creare il database con il file **DB_iot.txt** su OneDrive
