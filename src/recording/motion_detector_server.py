@@ -78,6 +78,7 @@ def subscribe():
         mqttc.loop()
     cv.destroyAllWindows()
     update_db_Registrazioni(date)
+    mqttc.disconnect()
     # chiusura connessione database
     cur.close()
     conn.close()
