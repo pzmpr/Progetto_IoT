@@ -28,4 +28,6 @@
   - [opzionale] aggiungere dati utenti riconosciuti nel database e in **recognition_server.py** e rispettive immagini nella directory /Images
   - creare la dashboard su grafana importando il file **dashboard_grafana_iot.json**
   - configurare la connessione del database nei file **_server**
+  - configurare indirizzo ip dell'host nei file **_client**
+  - modificare risoluzione telecamera e soglia nei file **motion_detection_**
   - eseguire gli script python nelle rispettive directory
