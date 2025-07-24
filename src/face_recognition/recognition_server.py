@@ -152,6 +152,7 @@ mqttc.on_message = on_message
 mqttc.connect(host, port)
 while not stop:
     mqttc.loop()
+mqttc.disconnect()
 # chiusura connessione database
 cur.close()
 conn.close()
