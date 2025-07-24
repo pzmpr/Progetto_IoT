@@ -30,14 +30,25 @@ host  = "127.0.0.1"
 port  = 1883
 topic = "Videos"
 qos   = 0
+flag_is_connected = False
 
 # signal handler
-stop = False
-
 def handle_signal(signum, frame):
-    global stop, app
-    stop = True
+    global app, flag_is_connected, dest, date
     print("\nUscita...")
+    if flag_is_connected:
+        mqttc.unsubscribe(topic)
+        mqttc.disconnect()
+        cv.destroyAllWindows()
+        # controlla che il file non sia vuoto
+        if os.path.getsize(dest) != 0:
+            update_db_Registrazioni(date)
+            compress_video(dest, date)
+        remove_file(dest)
+        # chiusura connessione database
+    cur.close()
+    conn.close()
+    os._exit(0)
 
 signal.signal(signal.SIGINT, handle_signal)
 
@@ -50,7 +61,7 @@ def remove_file(dest):
 conn = psycopg2.connect(
     dbname   = "Iot",
     user     = "postgres",
-    password = "",
+    password = "1234",
     host     = host,
     port     = "5432"
 )
@@ -58,8 +69,12 @@ cur = conn.cursor()
 print("Connesso al database Iot")
     
 def on_connect(client, userdata, flags, reason_code, properties):
-    global topic, qos
-    client.subscribe(topic, qos)
+    global topic, qos, flag_is_connected
+    if reason_code.is_failure:
+        print(f"\nImpossibile connettersi al broker: {reason_code}.")
+    else:
+        client.subscribe(topic, qos)
+        flag_is_connected = True
 
 def on_message(client, userdata, msg):
     global out, frame, prev_frame, lock, output_frame
@@ -73,20 +88,8 @@ def on_message(client, userdata, msg):
     #    return
 
 def subscribe():
-    global mqttc, stop, dest, date
-    while not stop:
-        mqttc.loop()
-    cv.destroyAllWindows()
-    update_db_Registrazioni(date)
-    mqttc.disconnect()
-    # chiusura connessione database
-    cur.close()
-    conn.close()
-    # compressione video
-    compress_video(dest, date)
-    remove_file(dest)
-    print("Video compresso")
-    os._exit(0)
+    global mqttc
+    mqttc.loop_forever()
 
 def update_db_Registrazioni(data):
     cur.execute("""
@@ -111,6 +114,7 @@ def compress_video(dest, date):
     dest = dest + ".mp4"
     result = ffmpeg.output(result, dest, bitrate='800k', loglevel='quiet')
     ffmpeg.run(result, overwrite_output = True)
+    print("Video compresso")
 
 # genera i frame per lo stream nella pagina web
 def generate():
