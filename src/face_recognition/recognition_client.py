@@ -114,4 +114,5 @@ while not stop:
     remove_file(dest)
 
 mqttc.loop_stop()
+mqttc.disconnect()
 cam.release()
