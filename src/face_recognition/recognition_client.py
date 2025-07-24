@@ -28,7 +28,6 @@ name    = ""
 
 # signal handler
 stop = False
-
 def handle_signal(signum, frame):
     global stop
     stop = True
