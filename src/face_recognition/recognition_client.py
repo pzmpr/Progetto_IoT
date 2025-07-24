@@ -112,7 +112,7 @@ while not stop:
         cam.grab()
         cam.grab()
         cam.grab()
-    remove_file(dest)
+        remove_file(dest)
 
 mqttc.loop_stop()
 mqttc.disconnect()
