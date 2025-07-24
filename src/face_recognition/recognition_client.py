@@ -91,6 +91,8 @@ while not stop:
     # cattura un frame ogni 5 secondi
     if delta > 5:
         ret, frame = cam.read()
+        if not os.path.exists("foto"):
+            os.makedirs("foto")
         dest = "foto/captured_image.png"
         cv.imwrite(dest, frame)
 
