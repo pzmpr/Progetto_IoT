@@ -39,11 +39,8 @@ pub_topic2 = "Images/Results/name"
 results = ("","")
 
 # signal handler
-stop = False
-
 def handle_signal(signum, frame):
-    global stop, flag_is_connected
-    stop = True
+    global flag_is_connected
     print("\nUscita...")
     if flag_is_connected:
         mqttc.unsubscribe(sub_topic)
