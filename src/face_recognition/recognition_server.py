@@ -57,7 +57,7 @@ def remove_file(dest):
 conn = psycopg2.connect(
     dbname   = "Iot",
     user     = "postgres",
-    password = "1234",
+    password = "",
     host     = host,
     port     = "5432"
 )
@@ -71,6 +71,8 @@ def on_message(client, userdata, message):
     global dest, current_time
     current_time = (datetime.datetime.now()).strftime("%Y-%m-%d %H:%M:%S")
     dest = "Images/unknown/unk-" + current_time + ".png"
+    if not os.path.exists("Images/unknown"):
+        os.makedirs("Images/unknown")
     file = open(dest, "wb")
     file.write(message.payload)
     print("Immagine ricevuta")
