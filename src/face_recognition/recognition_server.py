@@ -29,7 +29,7 @@ current_time = None
 dest = None
 
 # Variabili connessione mqtt
-qos  = 2
+qos = 2
 mqtt_host = "localhost"
 db_host   = "localhost"
 port = 1883
