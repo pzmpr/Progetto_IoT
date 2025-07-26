@@ -37,9 +37,9 @@
   - modificare file mosquitto.config nella cartella di installazione di mosquitto
     inserire / modificare le righe
 
-      accept_anonymous true
-      listener 1883 0.0.0.0
-  # -> commenti
+        accept_anonymous true
+        listener 1883 0.0.0.0
+  \# -> commenti
   - caricare il file di configurazione
 
-      mosquitto -c /{path}/mosquitto.conf
+        mosquitto -c /{path}/mosquitto.conf
