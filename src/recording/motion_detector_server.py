@@ -28,7 +28,8 @@ lock = threading.Lock()
 app  = Flask(__name__)
 
 # Variabili connessione mqtt
-host  = "127.0.0.1"
+mqtt_host  = "localhost"
+db_host    = "localhost"
 port  = 1883
 topic = "Videos"
 qos   = 0
@@ -47,7 +48,7 @@ def handle_signal(signum, frame):
             update_db_Registrazioni(date)
             compress_video(dest, date)
         remove_file(dest)
-        # chiusura connessione database
+    # chiusura connessione database
     cur.close()
     conn.close()
     os._exit(0)
@@ -64,7 +65,7 @@ conn = psycopg2.connect(
     dbname   = "Iot",
     user     = "postgres",
     password = "",
-    host     = host,
+    host     = db_host,
     port     = "5432"
 )
 cur = conn.cursor()
@@ -75,6 +76,7 @@ def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code.is_failure:
         print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
+        print("Connesso al broker mqtt")
         client.subscribe(topic, qos)
         flag_is_connected = True
 
@@ -88,10 +90,6 @@ def on_message(client, userdata, msg):
     # cv.imshow('recv', frame)              # mostra stream a schermo
     # if cv.waitKey(1) & 0xFF == ord('q'):
     #    return
-
-def subscribe():
-    global mqttc
-    mqttc.loop_forever()
 
 def update_db_Registrazioni(data):
     cur.execute("""
@@ -146,12 +144,10 @@ def video_feed():
         mimetype = "multipart/x-mixed-replace; boundary=frame")
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-mqttc.on_connect = on_connect  # callback function
+mqttc.on_connect = on_connect
 mqttc.on_message = on_message
-mqttc.connect(host,port)       # connessione broker
+mqttc.connect(mqtt_host, port)
 
-t = threading.Thread(target=subscribe) # thread per subscribe
-t.start()
-
-app.run(host=host, port=8000, debug=False,
+mqttc.loop_start()
+app.run(host="localhost", port=8000, debug=False,
         threaded=True, use_reloader=False)
