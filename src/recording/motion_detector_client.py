@@ -54,15 +54,17 @@ def modify_frame():
     # se il primo frame e' None, inizializzalo
     if prev_frame is None:
         prev_frame = gray
+    
     # calcola il valore assoluto della differenza tra il frame attuale e quello precedente
     frame_delta = cv.absdiff(prev_frame, gray)
     # aggiorna il frame precedente con l'ultimo frame
     prev_frame = gray
+
+    # calcola zone con movimento rilevato
     thresh = cv.threshold(frame_delta, TOLERANCE, 255, cv.THRESH_BINARY)[1]
     # dilata l'immagine soglia per riempire i buchi, poi trova i contorni nell'immagine soglia
     thresh = cv.dilate(thresh, None, iterations = 2)
-    cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL,
-        cv.CHAIN_APPROX_SIMPLE)
+    cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)  
     # cicla sui contorni
     for c in cnts:
@@ -73,6 +75,7 @@ def modify_frame():
         (x, y, w, h) = cv.boundingRect(c)
         cv.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Occupato"
+    
     # scrittura stato della stanza e timestamp
     cv.putText(frame, "Stato: {}".format(text), (10, 20),
         cv.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
@@ -91,7 +94,6 @@ def stream():
         if text == "Occupato":
             active = True
             timer = TIMER_VALUE
-            # invia frame
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
             mqttc.publish(topic, frame_str)
         elif active:
