@@ -31,3 +31,15 @@
   - configurare indirizzo ip dell'host nei file **_client**
   - modificare risoluzione telecamera e soglia nei file **motion_detection_**
   - eseguire gli script python nelle rispettive directory
+
+## Configurazione mosquitto
+  per configurare mosquitto per connessioni su LAN:
+  - modificare file mosquitto.config nella cartella di installazione di mosquitto
+    inserire / modificare le righe
+
+      accept_anonymous true
+      listener 1883 0.0.0.0
+  # -> commenti
+  - caricare il file di configurazione
+
+      mosquitto -c /{path}/mosquitto.conf
