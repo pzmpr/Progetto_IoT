@@ -16,7 +16,7 @@ dest = None
 
 # Variabili connessione mqtt
 qos  = 2
-host = "127.0.0.1"
+mqtt_host = "localhost"
 port = 1883
 sub_topic1 = "Images/Results/answer"
 sub_topic2 = "Images/Results/name"
@@ -57,6 +57,7 @@ def on_connect(client, userdata, flags, reason_code, properties):
     if reason_code.is_failure:
         print(f"\nImpossibile connettersi al broker: {reason_code}.")
     else:
+        print("Connesso al broker mqtt")
         client.subscribe(sub_topic1, qos)
         client.subscribe(sub_topic2, qos)
 
@@ -80,7 +81,7 @@ mqttc.on_connect = on_connect
 mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
-mqttc.connect(host, port)
+mqttc.connect(mqtt_host, port)
 mqttc.loop_start()
 while not stop: 
     current = time()
@@ -116,4 +117,4 @@ while not stop:
 
 mqttc.loop_stop()
 mqttc.disconnect()
-cam.release()
+cam.release()       # chiusura telecamera
