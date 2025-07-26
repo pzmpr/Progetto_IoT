@@ -35,11 +35,11 @@
 ## Configurazione mosquitto
   per configurare mosquitto per connessioni su LAN:
   - modificare file mosquitto.config nella cartella di installazione di mosquitto
+    (\# -> commenti)
     inserire / modificare le righe
 
         accept_anonymous true
         listener 1883 0.0.0.0
-  \# -> commenti
   - caricare il file di configurazione
 
         mosquitto -c /{path}/mosquitto.conf
