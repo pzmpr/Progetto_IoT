@@ -11,9 +11,10 @@ MINIMUM_AREA = 500  # area minima bounding box
 TOLLERANZA   = 50   # tolleranza rilevamento di movimento
 
 # Variabili connessione mqtt
-host  = "127.0.0.1"
+mqtt_host = "localhost"
 port  = 1883
 topic = "Videos"
+flag_is_connected = False
 
 # Variabili per stream video e rilevamento di movimento
 prev_frame = None
@@ -26,11 +27,22 @@ timer      = TIMER_VALUE
 stop = False
 
 def handle_signal(signum, frame):
-    global stop
+    global stop, flag_is_connected
     stop = True
     print("\nUscita...")
+    if flag_is_connected:
+        mqttc.unsubscribe(topic)
+        mqttc.disconnect()
 
 signal.signal(signal.SIGINT, handle_signal)
+
+def on_connect(client, userdata, flags, reason_code, properties):
+    global flag_is_connected
+    if reason_code.is_failure:
+        print(f"\nImpossibile connettersi al broker: {reason_code}.")
+    else:
+        print("Connesso al broker mqtt")
+        flag_is_connected = True
 
 def modify_frame():
     global frame, prev_frame, text
@@ -67,9 +79,6 @@ def modify_frame():
     cv.putText(frame, datetime.datetime.now().strftime("%a %d %B %Y %H:%M:%S"),
         (10, frame.shape[0] - 10), cv.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
-def start_streaming():
-    streaming_thread.start()
-
 def stream():
     global frame, active, timer, text, mqttc, topic
     print("Streaming avviato")
@@ -96,11 +105,13 @@ def stream():
 
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-mqttc.connect(host, port)
+mqttc.on_connect = on_connect
+
+mqttc.connect(mqtt_host, port)
 cam = cv.VideoCapture(0)
+streaming_thread = threading.Thread(target=stream)
+streaming_thread.start()
+mqttc.loop_forever()
 
-streaming_thread = threading.Thread(target=stream())
-
-mqttc.disconnect()
 # chiusura telecamera
 cam.release()
