@@ -28,8 +28,8 @@ lock = threading.Lock()
 app  = Flask(__name__)
 
 # Variabili connessione mqtt
-mqtt_host  = "localhost"
-db_host    = "localhost"
+mqtt_host = "localhost"
+db_host   = "localhost"
 port  = 1883
 topic = "Videos"
 qos   = 0
