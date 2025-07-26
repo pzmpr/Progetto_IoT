@@ -8,7 +8,7 @@ import os
 
 TIMER_VALUE  = 100  # circa 5 secondi
 MINIMUM_AREA = 500  # area minima bounding box
-TOLLERANZA   = 50   # tolleranza rilevamento di movimento
+TOLERANCE    = 50   # tolleranza rilevamento di movimento
 
 # Variabili connessione mqtt
 mqtt_host = "localhost"
@@ -58,7 +58,7 @@ def modify_frame():
     frame_delta = cv.absdiff(prev_frame, gray)
     # aggiorna il frame precedente con l'ultimo frame
     prev_frame = gray
-    thresh = cv.threshold(frame_delta, TOLLERANZA, 255, cv.THRESH_BINARY)[1]
+    thresh = cv.threshold(frame_delta, TOLERANCE, 255, cv.THRESH_BINARY)[1]
     # dilata l'immagine soglia per riempire i buchi, poi trova i contorni nell'immagine soglia
     thresh = cv.dilate(thresh, None, iterations = 2)
     cnts = cv.findContours(thresh.copy(), cv.RETR_EXTERNAL,
