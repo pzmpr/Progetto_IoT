@@ -11,8 +11,8 @@ cam = cv.VideoCapture(0)
 
 # Variabili per intervallo di tempo o percorso file
 previous = time()
-delta = 0
-dest = None
+delta    = 0
+dest     = None
 
 # Variabili connessione mqtt
 qos  = 2
