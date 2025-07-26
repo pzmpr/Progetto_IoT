@@ -1,4 +1,4 @@
-opencv-python
+opencv-contrib-python-headless
 cmake
 dlib
 face_recognition
