@@ -6,9 +6,10 @@ import signal
 import imutils
 import os
 
-TIMER_VALUE  = 100  # circa 5 secondi
-MINIMUM_AREA = 500  # area minima bounding box
-TOLERANCE    = 50   # tolleranza rilevamento di movimento
+TIMER_VALUE  = 100         # circa 5 secondi
+MINIMUM_AREA = 500         # area minima bounding box
+TOLERANCE    = 50          # tolleranza rilevamento di movimento
+RESOLUTION   = (640, 480)  # risoluzione video
 
 # Variabili connessione mqtt
 mqtt_host = "localhost"
@@ -48,7 +49,7 @@ def modify_frame():
     global frame, prev_frame, text
     text = "Libero"
     # scala il frame, convertilo a scala di grigi, sfuoca
-    frame = cv.resize(frame, (640,480))
+    frame = cv.resize(frame, RESOLUTION)
     gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     gray = cv.GaussianBlur(gray, (21, 21), 0)
     # se il primo frame e' None, inizializzalo
