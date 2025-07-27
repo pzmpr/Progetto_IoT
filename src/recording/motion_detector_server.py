@@ -10,6 +10,8 @@ import numpy as np
 import psycopg2
 from flask import Flask, Response, render_template
 
+FPS = 10  # frame/sec del video
+
 # Variabili per tempo e percorso file
 date = str(datetime.date.today())
 dest = "Videos/rec-" + date + ".avi"
@@ -18,7 +20,7 @@ dest = "Videos/rec-" + date + ".avi"
 if not os.path.exists("Videos"):
     os.makedirs("Videos")
 fourcc       = cv.VideoWriter_fourcc(*'DIVX')
-out          = cv.VideoWriter(dest, fourcc, 10, (640,  480))
+out          = cv.VideoWriter(dest, fourcc, FPS, (640,  480))
 prev_frame   = None
 frame        = None
 output_frame = None
