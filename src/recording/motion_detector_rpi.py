@@ -2,13 +2,14 @@ import cv2 as cv
 import threading
 import paho.mqtt.client as mqtt
 import datetime
+from time import time
 import signal
 import imutils
 import os
 
-TIMER_VALUE  = 100         # circa 5 secondi
+TIMER_VALUE  = 5           # timer per assenza di movimento
 MINIMUM_AREA = 500         # area minima bounding box
-TOLERANCE    = 50          # tolleranza rilevamento di movimento
+TOLERANCE    = 30          # tolleranza rilevamento di movimento
 RESOLUTION   = (640, 480)  # risoluzione video
 
 # Variabili connessione mqtt
@@ -22,7 +23,10 @@ prev_frame = None
 frame      = None
 active     = False
 text       = "Libero"
-timer      = TIMER_VALUE
+
+# Variabili per intervallo di tempo
+previous = time()
+delta = 0
 
 # signal handler
 stop = False
@@ -84,7 +88,7 @@ def modify_frame():
         (10, frame.shape[0] - 10), cv.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
 
 def stream():
-    global frame, active, timer, text, mqttc, topic
+    global frame, active, text, mqttc, topic, delta, previous
     print("Streaming avviato")
     while not stop:
         _ , frame = cam.read()
@@ -94,16 +98,18 @@ def stream():
         modify_frame()
         if text == "Occupato":
             active = True
-            timer = TIMER_VALUE
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
             mqttc.publish(topic, frame_str)
+            previous = time()
+            delta = 0
         elif active:
+            current = time()
+            delta += current - previous
+            previous = current
             frame_str = cv.imencode('.jpg', frame)[1].tobytes()
             mqttc.publish(topic, frame_str)
-            timer -= 1
-            if timer == 0:
+            if delta > TIMER_VALUE:
                 active = False
-                timer = TIMER_VALUE
 
 
 
