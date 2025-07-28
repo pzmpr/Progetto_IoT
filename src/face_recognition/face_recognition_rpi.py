@@ -92,7 +92,7 @@ while not stop:
 
     # cattura un frame ogni 5 secondi
     if delta > TIMER_VALUE:
-        ret, frame = cam.read()
+        _ , frame = cam.read()
         if not os.path.exists("foto"):
             os.makedirs("foto")
         dest = "foto/captured_image.png"
