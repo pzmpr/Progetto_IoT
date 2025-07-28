@@ -6,7 +6,7 @@ import signal
 import paho.mqtt.client as mqtt
 import sys
 
-TIMER = 5  # frequenza di acquisizione dei frame
+TIMER_VALUE = 5  # frequenza di acquisizione dei frame
 
 # Inizializzazione webcam
 cam = cv.VideoCapture(0)
@@ -91,7 +91,7 @@ while not stop:
     previous = current
 
     # cattura un frame ogni 5 secondi
-    if delta > TIMER:
+    if delta > TIMER_VALUE:
         ret, frame = cam.read()
         if not os.path.exists("foto"):
             os.makedirs("foto")
