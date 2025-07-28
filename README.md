@@ -55,7 +55,7 @@
   -v postgres-data:/var/lib/postgresql/data \
   -d postgres
   
-> docker exec -it postgres-db psql -U postgres -d Iot -f db.sql
+> docker exec -it postgres-db psql -U postgres -d Iot -f DB_iot.sql
 
 modificare postgres.conf <br>
 modificare pg_hba.conf inserendo indirizzi e porte
