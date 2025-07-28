@@ -59,3 +59,8 @@
 
 modificare postgres.conf <br>
 modificare pg_hba.conf inserendo indirizzi e porte
+
+## Creazione rete docker
+> docker network create <nome-rete>
+> docker network connect <nome-rete> <container>
+Connessione: <nome-container>:<porta>
