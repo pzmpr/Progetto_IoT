@@ -11,7 +11,7 @@ import psycopg2
 from flask import Flask, Response, render_template
 
 FPS = 10  # frame/sec del video
-RESOLUTION = (640, 480) # risoluzione video
+RESOLUTION = (640, 480)  # risoluzione video
 
 # Variabili per tempo e percorso file
 date = str(datetime.date.today())
