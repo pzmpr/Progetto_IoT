@@ -107,7 +107,7 @@ def update_db_Registrazioni(data):
 # si attiva quando il flusso di frame e' terminato (dopo CTRL-C)
 def compress_video(dest, date):
     print("Compressione video...")
-    result = ffmpeg.input(dest)
+    result = ffmpeg.input(dest+"a")
     dest = "Videos/rec-"+date
     i = 1
     if os.path.exists(dest+".mp4"):
@@ -115,8 +115,13 @@ def compress_video(dest, date):
             i += 1
         dest = (f"{dest}({i})")
     dest = dest + ".mp4"
-    result = ffmpeg.output(result, dest, bitrate='800k', loglevel='quiet')
-    ffmpeg.run(result, overwrite_output = True)
+    result = ffmpeg.output(result, dest, bitrate='800k', loglevel='error')
+    try:
+        ffmpeg.run(result, overwrite_output = True, capture_stderr = True)
+    except ffmpeg.Error as e:
+        err = e.stderr.decode('utf-8') if e.stderr else "None"
+        print("Compressione fallita: ", err )
+        return
     print("Video compresso")
 
 # genera i frame per lo stream nella pagina web
