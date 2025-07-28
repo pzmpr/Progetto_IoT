@@ -53,7 +53,7 @@
   -v postgres-data:/var/lib/postgresql/data \
   -d postgres
 
-> docker cp \<src-path\> . 
+> docker cp \<src-path\>/DB_IoT.sql . 
   
 > docker exec -it postgres-db psql -U postgres -d Iot -f DB_iot.sql
 
