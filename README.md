@@ -55,3 +55,6 @@
   -d postgres
   
 > docker exec -it postgres-db psql -U postgres -d Iot -f db.sql
+
+modificare postgres.conf
+modificare pg_hba.conf inserendo indirizzi e porte
