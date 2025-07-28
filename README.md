@@ -74,4 +74,4 @@ Connessione: \<nome-container\>:\<porta\>
 
 - creare account
 - creare connessione a database
-- importare file dashboard-grafana.json
+- importare file dashboard_grafana_iot.json
