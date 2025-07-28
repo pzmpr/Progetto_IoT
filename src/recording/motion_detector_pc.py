@@ -107,7 +107,7 @@ def update_db_Registrazioni(data):
 # si attiva quando il flusso di frame e' terminato (dopo CTRL-C)
 def compress_video(dest, date):
     print("Compressione video...")
-    result = ffmpeg.input(dest+"a")
+    result = ffmpeg.input(dest)
     dest = "Videos/rec-"+date
     i = 1
     if os.path.exists(dest+".mp4"):
