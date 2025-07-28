@@ -120,7 +120,7 @@ def compress_video(dest, date):
         ffmpeg.run(result, overwrite_output = True, capture_stderr = True)
     except ffmpeg.Error as e:
         err = e.stderr.decode('utf-8') if e.stderr else "None"
-        print("Compressione fallita: ", err )
+        print("Compressione fallita: ", err)
         return
     print("Video compresso")
 
