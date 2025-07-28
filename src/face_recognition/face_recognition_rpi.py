@@ -5,8 +5,9 @@ import os
 import signal
 import paho.mqtt.client as mqtt
 import sys
+import threading
 
-TIMER_VALUE = 5  # frequenza di acquisizione dei frame
+TIMER = 5  # frequenza di acquisizione dei frame
 
 # Inizializzazione webcam
 cam = cv.VideoCapture(0)
@@ -64,17 +65,19 @@ def on_connect(client, userdata, flags, reason_code, properties):
         client.subscribe(sub_topic2, qos)
 
 def print_results():
-    global recieved_ans, recieved_nm, results, name, dest
-    recieved_ans = False
-    recieved_nm = False
-    if results == "NA":
-        print("Non e' stato riconosciuto alcun volto")
-    elif results == "Si":
-        answer = "Si, e\' " + name
-        print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
-    elif results == "No":
-        answer = "No"
-        print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
+    global recieved_ans, recieved_nm, results, name, dest, stop
+    while not stop:
+        if recieved_ans and recieved_nm:
+            recieved_ans = False
+            recieved_nm = False
+            if results == "NA":
+                print("Non e' stato riconosciuto alcun volto")
+            elif results == "Si":
+                answer = "Si, e\' " + name
+                print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
+            elif results == "No":
+                answer = "No"
+                print("L'immagine sconosciuta e' quella di una persona conosciuta:", answer)
 
 
 
@@ -84,6 +87,9 @@ mqttc.on_publish = on_publish
 mqttc.on_message = on_message
 
 mqttc.connect(mqtt_host, port)
+answer_thread = threading.Thread(target=print_results)
+answer_thread.start()
+
 mqttc.loop_start()
 while not stop: 
     current = time()
@@ -91,8 +97,8 @@ while not stop:
     previous = current
 
     # cattura un frame ogni 5 secondi
-    if delta > TIMER_VALUE:
-        _ , frame = cam.read()
+    if delta > TIMER:
+        ret, frame = cam.read()
         if not os.path.exists("foto"):
             os.makedirs("foto")
         dest = "foto/captured_image.png"
@@ -104,9 +110,6 @@ while not stop:
         byteArr = bytearray(fileContent)
         mqttc.publish(pub_topic, byteArr)
         img.close()
-        
-        if recieved_ans and recieved_nm:
-            print_results()
 
         delta = 0
         # elimino foto nel buffer (la fotocamera scatta foto in successione)
