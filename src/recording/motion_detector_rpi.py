@@ -10,7 +10,7 @@ import os
 TIMER_VALUE  = 5           # timer per assenza di movimento
 MINIMUM_AREA = 500         # area minima bounding box
 TOLERANCE    = 30          # tolleranza rilevamento di movimento
-RESOLUTION   = (640, 480)  # risoluzione video
+RESOLUTION   = (1920, 1080)  # risoluzione video
 
 # Variabili connessione mqtt
 mqtt_host = "localhost"
