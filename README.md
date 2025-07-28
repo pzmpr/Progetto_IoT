@@ -68,3 +68,10 @@ https://medium.com/@yeyangg/configuring-postgresql-for-lan-network-access-2023-f
 > docker network connect \<nome-rete\> \<container\>
 
 Connessione: \<nome-container\>:\<porta\>
+
+## Configurazione grafana
+> docker run -d --name=grafana -p 3000:3000 grafana/grafana
+
+- creare account
+- creare connessione a database
+- importare file dashboard-grafana.json
