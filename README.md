@@ -39,7 +39,7 @@
 
         accept_anonymous true
         listener 1883 0.0.0.0
-  - caricare il file di configurazione
+  - caricare il file di configurazione (su docker invece caricare il file con -v)
 
         mosquitto -c /{path}/mosquitto.conf
 
