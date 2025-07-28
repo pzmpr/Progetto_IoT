@@ -60,6 +60,8 @@
 modificare postgres.conf <br>
 modificare pg_hba.conf inserendo indirizzi e porte
 
+https://medium.com/@yeyangg/configuring-postgresql-for-lan-network-access-2023-fcbd2df4a157
+
 ## Creazione rete docker
 > docker network create \<nome-rete\>
 
