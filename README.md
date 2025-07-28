@@ -45,12 +45,12 @@
 
   da docker invece di specificare le porte (-p) specificare la connessione (--network host) per connessione LAN
 ## Configurazione postgres
-> docker run --name postgres-db \
-  -e POSTGRES_PASSWORD=1234 \
-  -e POSTGRES_USER=postgres \
-  -e POSTGRES_DB=Iot \
-  -p 5432:5432 \
-  -v postgres-data:/var/lib/postgresql/data \
+> docker run --name postgres-db 
+  -e POSTGRES_PASSWORD=1234 
+  -e POSTGRES_USER=postgres 
+  -e POSTGRES_DB=Iot 
+  -p 5432:5432 
+  -v postgres-data:/var/lib/postgresql/data 
   -d postgres
 
 > docker cp \<src-path\>/DB_IoT.sql . 
