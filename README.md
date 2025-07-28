@@ -43,6 +43,7 @@
 
         mosquitto -c /{path}/mosquitto.conf
 
+  da docker invece di specificare le poste (-p) specificare la connessione (--network host) per connessione LAN
 ## Configurazione postgres
 > docker pull postgres
 
