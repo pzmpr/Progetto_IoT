@@ -45,8 +45,6 @@
 
   da docker invece di specificare le porte (-p) specificare la connessione (--network host) per connessione LAN
 ## Configurazione postgres
-> docker pull postgres
-
 > docker run --name postgres-db \
   -e POSTGRES_PASSWORD=1234 \
   -e POSTGRES_USER=postgres \
