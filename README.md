@@ -42,3 +42,16 @@
   - caricare il file di configurazione
 
         mosquitto -c /{path}/mosquitto.conf
+
+## Configurazione postgres
+> docker pull postgres
+
+> docker run --name postgres-db \
+  -e POSTGRES_PASSWORD=1234 \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_DB=Iot \
+  -p 5432:5432 \
+  -v postgres-data:/var/lib/postgresql/data \
+  -d postgres
+  
+> docker exec -it postgres-db psql -U postgres -d Iot -f db.sql
