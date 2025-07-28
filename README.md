@@ -10,7 +10,7 @@
   - per fermare il programma: CTRL-C
 
 ## Recording
-  - visualizza un video (telecamera o file)
+  - visualizza un video (telecamera)
   - calcola i cambiamenti avvenuti dal frame iniziale
   - riconosce gli oggetti che si sono mossi
   - registra video solamente quando riconosce movimento (si disattiva dopo 5 secondi se non rileva piu' movimento)
